@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "671702763717",
+    "project_id": "royapp-8ac41",
+    "storage_bucket": "royapp-8ac41.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:671702763717:android:82b4a67f3f055aab3b08ac",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnM6RvotC6_wETi0vX-78qrMkdLioGmfs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
