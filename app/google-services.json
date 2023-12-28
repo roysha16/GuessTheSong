@@ -1,21 +1,22 @@
 {
   "project_info": {
-    "project_number": "671702763717",
-    "project_id": "royapp-8ac41",
-    "storage_bucket": "royapp-8ac41.appspot.com"
+    "project_number": "645591131635",
+    "firebase_url": "https://guessthesong-211ca-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "guessthesong-211ca",
+    "storage_bucket": "guessthesong-211ca.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:671702763717:android:82b4a67f3f055aab3b08ac",
+        "mobilesdk_app_id": "1:645591131635:android:a1e2cd230c8a899a2f1e86",
         "android_client_info": {
-          "package_name": "com.example.myapplication"
+          "package_name": "com.roysha.gts"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBnM6RvotC6_wETi0vX-78qrMkdLioGmfs"
+          "current_key": "AIzaSyCtgTQO1q4w_hOA4AzeDS48l8d34hQfP78"
         }
       ],
       "services": {

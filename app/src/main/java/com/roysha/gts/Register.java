@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.roysha.gts;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;

@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.roysha.gts;
 
 public class QuestionAnswer {
     public static String question[] ={
