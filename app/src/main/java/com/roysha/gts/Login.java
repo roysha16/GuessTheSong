@@ -17,6 +17,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -29,6 +30,7 @@ import java.util.Map;
 public class Login extends AppCompatActivity {
     EditText editTextEmail, editTextPassword;
     Button buttonReg;
+    Button buttonLogin;
     FirebaseAuth mAuth;
 /*
     ///Roysha test
@@ -80,6 +82,13 @@ public class Login extends AppCompatActivity {
         });
     }*/
 
+    public void LoginSuccess() {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null){
+            Toast.makeText(Login.this, currentUser.getEmail(),
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
     ////end RoySha
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +97,7 @@ public class Login extends AppCompatActivity {
         editTextEmail = findViewById(R.id.editEmail);
         editTextPassword = findViewById(R.id.editPassword);
         buttonReg = findViewById(R.id.Register);
+        buttonLogin = findViewById(R.id.Login);
         mAuth = FirebaseAuth.getInstance();
 
         buttonReg.setOnClickListener(new View.OnClickListener() {
@@ -113,6 +123,7 @@ public class Login extends AppCompatActivity {
 
                             Toast.makeText(Login.this, "Account created.",
                                     Toast.LENGTH_SHORT).show();
+                            LoginSuccess();
                         } else {
                             Toast.makeText(Login.this, "Registration failed.",
                                     Toast.LENGTH_SHORT).show();
@@ -120,7 +131,44 @@ public class Login extends AppCompatActivity {
                             String str=excp.getMessage();
                             Toast.makeText(Login.this, str,
                                     Toast.LENGTH_LONG).show();
-                            //           Log.w("login", "signInWithEmail:failure", task.getException());
+
+
+                        }
+                    }
+                });
+            }
+        });
+        buttonLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String email, password;
+                email = editTextEmail.getText().toString();
+                password = editTextPassword.getText().toString();
+
+                if (TextUtils.isEmpty(email)) {
+                    Toast.makeText(Login.this, "Enter email", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                if (TextUtils.isEmpty(password)) {
+                    Toast.makeText(Login.this, "Enter password", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+
+                            Toast.makeText(Login.this, "Success Login",
+                                    Toast.LENGTH_SHORT).show();
+                            LoginSuccess();
+                        } else {
+                            Toast.makeText(Login.this, "Login failed.",
+                                    Toast.LENGTH_SHORT).show();
+                            Exception excp= task.getException();
+                            String str=excp.getMessage();
+                            Toast.makeText(Login.this, str,
+                                    Toast.LENGTH_LONG).show();
 
 
                         }
