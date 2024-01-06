@@ -1,14 +1,22 @@
 package com.roysha.gts;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -21,7 +29,8 @@ import java.util.Map;
 public class Login extends AppCompatActivity {
     EditText editTextEmail, editTextPassword;
     Button buttonReg;
-
+    FirebaseAuth mAuth;
+/*
     ///Roysha test
     Map<String, Question> QuestionsList = new HashMap<>();
 
@@ -69,7 +78,7 @@ public class Login extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
             }
         });
-    }
+    }*/
 
     ////end RoySha
     @Override
@@ -79,6 +88,7 @@ public class Login extends AppCompatActivity {
         editTextEmail = findViewById(R.id.editEmail);
         editTextPassword = findViewById(R.id.editPassword);
         buttonReg = findViewById(R.id.Register);
+        mAuth = FirebaseAuth.getInstance();
 
         buttonReg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,19 +97,35 @@ public class Login extends AppCompatActivity {
                 email = editTextEmail.getText().toString();
                 password = editTextPassword.getText().toString();
 
-                //roysha test
-               // basicWriteDb();
-                basicReadDb();
-                //end test
-                    if(TextUtils.isEmpty(email)){
+                if (TextUtils.isEmpty(email)) {
                     Toast.makeText(Login.this, "Enter email", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                if(TextUtils.isEmpty(password)){
+                if (TextUtils.isEmpty(password)) {
                     Toast.makeText(Login.this, "Enter password", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+
+                            Toast.makeText(Login.this, "Account created.",
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(Login.this, "Registration failed.",
+                                    Toast.LENGTH_SHORT).show();
+                            Exception excp= task.getException();
+                            String str=excp.getMessage();
+                            Toast.makeText(Login.this, str,
+                                    Toast.LENGTH_LONG).show();
+                            //           Log.w("login", "signInWithEmail:failure", task.getException());
+
+
+                        }
+                    }
+                });
             }
         });
     }
