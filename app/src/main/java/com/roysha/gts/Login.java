@@ -3,6 +3,7 @@ package com.roysha.gts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -38,6 +39,9 @@ public class Login extends AppCompatActivity {
         if(currentUser != null){
             Toast.makeText(Login.this, currentUser.getEmail(),
                     Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent(Login.this, MainActivity.class);
+            startActivity(intent);
         }
     }
     ////end RoySha
@@ -50,6 +54,12 @@ public class Login extends AppCompatActivity {
         buttonReg = findViewById(R.id.Register);
         buttonLogin = findViewById(R.id.Login);
         mAuth = FirebaseAuth.getInstance();
+
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null){
+            LoginSuccess();
+            return;
+        }
 
         buttonReg.setOnClickListener(new View.OnClickListener() {
             @Override

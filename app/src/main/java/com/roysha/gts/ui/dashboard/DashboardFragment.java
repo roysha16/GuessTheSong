@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.roysha.gts.databinding.FragmentDashboardBinding;
 
-public class GameFragment extends Fragment {
+public class DashboardFragment extends Fragment {
 
     private FragmentDashboardBinding binding;
 

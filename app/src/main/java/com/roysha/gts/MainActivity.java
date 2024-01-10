@@ -1,55 +1,62 @@
 package com.roysha.gts;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
+//import com.example.button.databinding.ActivityMainBinding;
+import android.os.Bundle;
 
-    TextView totalQuestionsTextView;
-    TextView questionTextView;
-    Button ansA, ansB, ansC, ansD;
-    Button submitBtn;
 
-    int score=0;
-    int totalQuestion = QuestionAnswer.question.length;
-    int currentQuestionIndex = 0;
-    String selectedAnswer = "";
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
+
+
+import com.roysha.gts.databinding.ActivityMainBinding;
+
+public class MainActivity extends AppCompatActivity {
+
+    private ActivityMainBinding binding;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        totalQuestionsTextView = findViewById(R.id.total_questions);
-        questionTextView = findViewById(R.id.question);
-        ansA = findViewById(R.id.ans_A);
-        ansB = findViewById(R.id.ans_B);
-        ansC = findViewById(R.id.ans_C);
-        ansD = findViewById(R.id.ans_D);
-        submitBtn = findViewById(R.id.submit);
+        ActionBar bar = getSupportActionBar();
 
-        ansA.setOnClickListener(this);
-        ansB.setOnClickListener(this);
-        ansC.setOnClickListener(this);
-        ansD.setOnClickListener(this);
-        submitBtn.setOnClickListener(this);
-        totalQuestionsTextView.setText("Total questions:"+totalQuestion);
-        // Write a message to the database
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("message");
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        myRef.setValue("Hello, World!");
+
+        BottomNavigationView navView = findViewById(R.id.nav_view);
+        // Passing each menu ID as a set of Ids because each
+        // menu should be considered as top level destinations.
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications)
+                .build();
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
+
+   //     ..  toolbar = (Toolbar) navController;
+   //     setSupportActionBar(toolbar);
+
+
+        androidx.appcompat.app.ActionBar bar2 = this.getSupportActionBar();
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        NavigationUI.setupWithNavController(binding.navView, navController);
     }
 
-    @Override
-    public void onClick(View v) {
-
-    }
 }
