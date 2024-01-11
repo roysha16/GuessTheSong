@@ -1,4 +1,4 @@
-package com.roysha.gts.ui.dashboard;
+package com.roysha.gts.ui.score;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,22 +10,22 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.roysha.gts.databinding.FragmentDashboardBinding;
+import com.roysha.gts.databinding.FragmentScoreBinding;
 
-public class DashboardFragment extends Fragment {
+public class ScoreFragment extends Fragment {
 
-    private FragmentDashboardBinding binding;
+    private FragmentScoreBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        DashboardViewModel dashboardViewModel =
-                new ViewModelProvider(this).get(DashboardViewModel.class);
+        ScoreViewModel homeViewModel =
+                new ViewModelProvider(this).get(ScoreViewModel.class);
 
-        binding = FragmentDashboardBinding.inflate(inflater, container, false);
+        binding = FragmentScoreBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textDashboard;
-        dashboardViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        final TextView textView = binding.textScore;
+        homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
         return root;
     }
 

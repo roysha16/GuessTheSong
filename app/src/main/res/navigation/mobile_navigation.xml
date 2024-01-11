@@ -3,23 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_game">
 
     <fragment
-        android:id="@+id/navigation_home"
-        android:name="com.roysha.gts.ui.home.HomeFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        android:id="@+id/navigation_game"
+        android:name="com.roysha.gts.ui.game.GameFragment"
+        android:label="Game"
+        tools:layout="@layout/fragment_game" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.roysha.gts.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_score"
+        android:name="com.roysha.gts.ui.score.ScoreFragment"
+        android:label="Score"
+        tools:layout="@layout/fragment_score" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.roysha.gts.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_setting"
+        android:name="com.roysha.gts.ui.setting.SettingFragment"
+        android:label="Setting"
+        tools:layout="@layout/fragment_setting" />
 </navigation>
