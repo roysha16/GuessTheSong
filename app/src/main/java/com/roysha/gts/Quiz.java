@@ -22,6 +22,7 @@ public class Quiz extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
+        basicReadDb();
     }
     EditText editTextEmail, editTextPassword;
     Button buttonReg;
@@ -40,11 +41,11 @@ public class Quiz extends AppCompatActivity {
         dbQReference = firebaseDatabase.getReference("Questions");
 
         Map<String, Question> Qs = new HashMap<>();
-        Qs.put("1", new  Question(2, "Question 1?", "Question 2?", "Question 3?", "Question 4?"));
-        Qs.put("2", new  Question(3, "Question 21?", "Question 22?", "Question 3?", "Question 4?"));
+       // Qs.put("1", new  Question(2,"Q1", "Question 1?", "Question 2?", "Question 3?", "Question 4?"));
+       // Qs.put("2", new  Question(3,"Q2",  "Question 21?", "Question 22?", "Question 3?", "Question 4?"));
         dbQReference.setValue(Qs);
-        Question Quest1 = new Question(4, "Question4 1?", "Question4 2?", "Qu4estion 3?", "Question 4?");
-        dbQReference.child("4").setValue(Quest1);
+       // Question Quest1 = new Question(4,"Q3", "Question4 1?", "Question4 2?", "Qu4estion 3?", "Question 4?");
+      //  dbQReference.child("4").setValue(Quest1);
     }
     private void basicReadDb() {
 
