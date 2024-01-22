@@ -8,24 +8,25 @@ public class Question {
     //Firebase require  to have public variables or getter/setter.
     public int CorrectAnswer;
     public int id;
-    public String Question;
     public String A1;
     public String A2;
     public String A3;
     public String A4;
+    public String Question;
+
     public Question(){
 
     }
-    public Question(int currentAns, int id, String Quest, String A1, String A2, String A3, String A4){
-
-        this.CorrectAnswer = currentAns;
-        this.id = id;
+    public Question(int CorrectAnswer,int id, String A1, String A2, String A3, String A4, String Question){
         this.A1 = A1;
         this.A2 = A2;
         this.A3 = A3;
         this.A4 = A4;
+        this.Question= Question;
+        this.id = id;
+        this.CorrectAnswer = CorrectAnswer;
     }
-    public String getAnswer(int Id){
+    public String getQuestion(int Id){
         String ReturnQ = "";
         switch(Id){
             case 1:
