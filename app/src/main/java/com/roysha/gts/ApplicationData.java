@@ -1,6 +1,8 @@
 package com.roysha.gts;
 
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -21,19 +23,26 @@ public class ApplicationData {
     DatabaseReference dbQReference;
     DatabaseReference dbScoreReference;
 
+
     ArrayList<Question> QuestionsList = new ArrayList<>();
     Score[] Scores = new Score[10];
 
     public ApplicationData() {
-       // InitDB();
 
     }
 
 
-    public void basicWriteDb() {
+    public void WriteScoreDb(int newScore) {
+
+        FirebaseAuth mAuth;
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        Score nScore = new Score(newScore, currentUser.getEmail(), currentUser.getUid() );
+
+        dbScoreReference.child(currentUser.getUid()).setValue(nScore);
 
 
-     //   Map<String, Question> Qs = new HashMap<>();
+        //   Map<String, Question> Qs = new HashMap<>();
     //    Qs.put("1", new  Question(2, "Question 1?", "Question 2?", "Question 3?", "Question 4?"));
     //    Qs.put("2", new  Question(3, "Question 21?", "Question 22?", "Question 3?", "Question 4?"));
         //  dbQReference.setValue(Qs);
@@ -44,6 +53,7 @@ public class ApplicationData {
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         dbQReference = firebaseDatabase.getReference("Questions");
+        dbScoreReference = firebaseDatabase.getReference("Scores");
         dbQReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
