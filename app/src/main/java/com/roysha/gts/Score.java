@@ -6,13 +6,20 @@ public class Score {
     public String email;
     public String uID;
 
+    public String date;
+
     public Score() {
 
     }
 
-    public Score(int bestScore, String email, String uID) {
+    public Score(int bestScore, String email, String uID,String date ) {
         this.bestScore = bestScore;
         this.email = email;
         this.uID = uID;
+        this.date = date;
+    }
+    public String toString(){
+        return String.valueOf(bestScore) + ":" + email;
     }
 }
+

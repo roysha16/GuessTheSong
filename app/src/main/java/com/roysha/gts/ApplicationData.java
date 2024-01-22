@@ -10,6 +10,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.lang.reflect.Array;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,11 +27,14 @@ public class ApplicationData {
 
 
     ArrayList<Question> QuestionsList = new ArrayList<>();
-    Score[] Scores = new Score[10];
+    static ArrayList<Score> Scores = new ArrayList<>();//Score[10];
 
     public ApplicationData() {
 
     }
+
+    static public Score getScore(int indx) { return Scores.get(indx);}
+
 
 
     public void WriteScoreDb(int newScore) {
@@ -37,9 +42,13 @@ public class ApplicationData {
         FirebaseAuth mAuth;
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        Score nScore = new Score(newScore, currentUser.getEmail(), currentUser.getUid() );
 
-        dbScoreReference.child(currentUser.getUid()).setValue(nScore);
+        LocalDateTime myDateObj = LocalDateTime.now();
+        DateTimeFormatter myFormatObj = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        String formattedDate = myDateObj.format(myFormatObj);
+        Score nScore = new Score(newScore, currentUser.getEmail(), currentUser.getUid(),formattedDate );
+
+        dbScoreReference.child(String.valueOf(newScore)).setValue(nScore);
 
 
         //   Map<String, Question> Qs = new HashMap<>();
@@ -62,6 +71,30 @@ public class ApplicationData {
                     QuestionsList.clear();
                 //  QuestionsList.add(dataSnapshot.getKey(),question);
                   QuestionsList.add(question);
+
+            }
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
+            }
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+        dbScoreReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
+                Score score = dataSnapshot.getValue(Score.class);
+                if(previousChildName == null)
+                    Scores.clear();
+                //  QuestionsList.add(dataSnapshot.getKey(),question);
+                Scores.add(score);
 
             }
             @Override

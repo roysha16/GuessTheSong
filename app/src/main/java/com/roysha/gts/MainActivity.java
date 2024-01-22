@@ -60,7 +60,10 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.navView, navController);
 
         applicationData.InitDB();
-        applicationData.WriteScoreDb(33);
+        //  applicationData.WriteScoreDb(33);
+        //applicationData.WriteScoreDb(3);
+        //applicationData.WriteScoreDb(11);
+
     }
 
 }

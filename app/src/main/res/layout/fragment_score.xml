@@ -10,14 +10,6 @@
     tools:context=".ui.score.ScoreFragment">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/Score"
-        android:text="Score"
-        android:layout_centerHorizontal="true"
-        android:textSize="20dp"/>
-
-    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/topgames"

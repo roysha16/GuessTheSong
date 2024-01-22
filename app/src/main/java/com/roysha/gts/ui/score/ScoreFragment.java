@@ -24,8 +24,10 @@ public class ScoreFragment extends Fragment {
         binding = FragmentScoreBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-       // final TextView textView = binding.textScore;
-       // homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+        final TextView textViewGame1 = binding.game1;
+        homeViewModel.getTextS1().observe(getViewLifecycleOwner(), textViewGame1::setText);
+        final TextView textViewGame2 = binding.game2;
+        homeViewModel.getTextS2().observe(getViewLifecycleOwner(), textViewGame2::setText);
         return root;
     }
 
