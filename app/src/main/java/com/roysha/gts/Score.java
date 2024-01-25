@@ -2,7 +2,7 @@ package com.roysha.gts;
 
 public class Score {
 
-    public int bestScore;
+    public int score;
     public String email;
     public String uID;
 
@@ -12,14 +12,14 @@ public class Score {
 
     }
 
-    public Score(int bestScore, String email, String uID,String date ) {
-        this.bestScore = bestScore;
+    public Score(int score, String email, String uID,String date ) {
+        this.score = score;
         this.email = email;
         this.uID = uID;
         this.date = date;
     }
     public String toString(){
-        return String.valueOf(bestScore) + ":" + email;
+        return String.valueOf(score) + " " + email + "at" + date;
     }
 }
 

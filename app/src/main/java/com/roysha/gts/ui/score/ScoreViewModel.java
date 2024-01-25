@@ -15,7 +15,7 @@ public class ScoreViewModel extends ViewModel {
 
 
     public ScoreViewModel() {
-        mTextScore1 = new MutableLiveData<>();
+       mTextScore1 = new MutableLiveData<>();
         nextScore=ApplicationData.getScore(0);
         mTextScore1.setValue(nextScore.toString());
         mTextScore2 = new MutableLiveData<>();
