@@ -1,93 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/black"
-        android:padding="24dp"
-        android:orientation="vertical"
-        tools:context=".ui.game.GameFragment">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:padding="24dp"
+    android:orientation="vertical"
+    tools:context=".ui.game.GameFragment">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/total_questions"
-            android:text="Total Questions "
-            android:layout_centerHorizontal="true"
-            android:textSize="20dp"/>
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="392dp"
+        android:layout_height="372dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.533"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/img" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/question"
-            android:textStyle="bold"
-            android:text="This will be the question"
-            android:textColor="@color/white"
-            android:textSize="24dp"
-            android:textAlignment="center"
-            android:layout_margin="20dp"
-            android:layout_above="@id/choices_layout"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/lastGameScoreT"
+        android:text="Last Game Score "
+        android:layout_centerHorizontal="true"
+        android:textSize="16dp"
+        android:textColor="@color/purple_200"/>
 
 
-        <LinearLayout
-            android:id="@+id/choices_layout"
-            android:layout_width="503dp"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:orientation="vertical">
+    <ListView
+        android:id="@+id/simpleListView"
+        android:layout_width="wrap_content"
+        android:layout_height="135dp"
+        android:divider="@color/material_blue_grey_800"
+        android:dividerHeight="1dp" />
 
-            <Button
-                android:id="@+id/ans_A"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:backgroundTint="@color/white"
-                android:text="Ans A"
-                android:textColor="@color/black" />
-
-            <Button
-                android:id="@+id/ans_B"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:backgroundTint="@color/white"
-                android:text="Ans B"
-                android:textColor="@color/black" />
-
-            <Button
-                android:id="@+id/ans_C"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:backgroundTint="@color/white"
-                android:text="Ans C"
-                android:textColor="@color/black" />
-
-            <Button
-                android:id="@+id/ans_D"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:backgroundTint="@color/white"
-                android:text="Ans D"
-                android:textColor="@color/black" />
-
-        </LinearLayout>
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/submit"
-            android:text="Submit"
-            android:layout_below="@id/choices_layout"
-            android:layout_marginTop="40dp"/>
-
-    <EditText
-        android:id="@+id/edittext"
+    <Button
+        android:id="@+id/StartNewGame"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:text="10"/>
+        android:layout_below="@id/choices_layout"
+        android:layout_marginTop="40dp"
+        android:text="Start" />
 
 </LinearLayout>

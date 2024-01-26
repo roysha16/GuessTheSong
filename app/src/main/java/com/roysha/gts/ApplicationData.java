@@ -23,14 +23,20 @@ public class ApplicationData {
 
     ///Roysha test
     // Firebase Database.
+    private static final int MAX_SCORE_LIST = 10;
+
 
 
     ArrayList<Question> QuestionsList = new ArrayList<>();
-    static ArrayList<Score> Scores = new ArrayList<>();//Score[10];
+    static ArrayList<Score> Scores = new ArrayList<>();
+    static Score lastGameScore = new Score(99,"roysha@ss.com","111","160606");
 
     public ApplicationData() {
 
     }
+
+    static public Score getLastScore(){return lastGameScore;}
+    static public void setLastScore(Score newscore){lastGameScore=newscore;}
 
     static public Score getScore(int indx) {
         Score rcScore = new Score(0, "", "", "");
@@ -74,24 +80,40 @@ public class ApplicationData {
 
         Score nScore = new Score(newScore, currentUser.getEmail(), currentUser.getUid(),formattedDate );
 
-        int size = Scores.size();
-        int i = 0;
-        /// check if need to store score
-        for(;i<size;i++)  {
-            if(newScore > Scores.get(i).score) {
-              //  Scores.add(i,nScore);
-                if (i+1 < 5)
-                    dbScoreReference.child(String.valueOf(i+1)).setValue(Scores.get(i));
-                dbScoreReference.child(String.valueOf(i)).setValue(nScore);
+        int sizeCurrentTable = Scores.size();
+        int sizeMaxAllowedTable = MAX_SCORE_LIST;
+        int indxOfMyScore = 0;
 
+        /// check if need to store score
+        for(;indxOfMyScore<sizeCurrentTable;indxOfMyScore++)  {
+            if(newScore > Scores.get(indxOfMyScore).score) {
+              //  Scores.add(i,nScore);
+              //  if (i+1 < 5)
+                //    dbScoreReference.child(String.valueOf(i+1)).setValue(Scores.get(i));
+                //dbScoreReference.child(String.valueOf(i)).setValue(nScore);
+                // my score is better then what we have in the table
                 break;
             }
         }
-        if ((i==size) && (size < 5)) {
+
+        Score scoreAfter=nScore;
+        for (int i = indxOfMyScore;
+             (indxOfMyScore < sizeMaxAllowedTable) && (indxOfMyScore <= sizeCurrentTable);
+             ++indxOfMyScore)
+        {
+            if ((indxOfMyScore + 1 < sizeMaxAllowedTable) && (indxOfMyScore < sizeCurrentTable)){
+
+                scoreAfter = Scores.get(indxOfMyScore);
+            }
+            dbScoreReference.child(String.valueOf(indxOfMyScore)).setValue(nScore);
+            nScore = scoreAfter;
+
+        }
+     /*   if ((i==sizeCurrentTable) && (sizeCurrentTable < sizeMaxAllowedTable)) {
             //Scores.add(nScore);
             dbScoreReference.child(String.valueOf(i)).setValue(nScore);
 
-        }
+        }*/
         //dbScoreReference.setValue(Scores);
 
 
@@ -155,7 +177,7 @@ public class ApplicationData {
             public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
                 Score score = dataSnapshot.getValue(Score.class);
                 String key = dataSnapshot.getKey();
-               // if(previousChildName == null)
+                //if(previousChildName == null)
                  //   Scores.clear();
                 //  QuestionsList.add(dataSnapshot.getKey(),question);
                 int iKey = Integer.valueOf(key);
@@ -164,9 +186,13 @@ public class ApplicationData {
             }
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
+                Score score = dataSnapshot.getValue(Score.class);
+                String key = dataSnapshot.getKey();
             }
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
+                Score score = dataSnapshot.getValue(Score.class);
+                String key = dataSnapshot.getKey();
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
