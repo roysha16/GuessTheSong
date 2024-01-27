@@ -39,8 +39,8 @@ public class ScoreFragment extends Fragment {
             HashMap<String,String> item = new HashMap<String,String>();
             int sc = ApplicationData.getScore(i).score;
             item.put("line1", String.valueOf(i+1) + ". " + String.valueOf(sc));
-            item.put( "line2", ApplicationData.getScore(i).email);
-            item.put( "line3", ApplicationData.getScore(i).date);
+            item.put( "line2", ApplicationData.getScore(i).email + " " + ApplicationData.getScore(i).date );
+            item.put( "line3", "");//ApplicationData.getScore(i).date);
 
             list.add( item );
         }
