@@ -15,6 +15,7 @@ import android.widget.Toast;
 public class Quiz extends AppCompatActivity {
 
     Button buttonSubmit;
+    static int score = 5; // just for testing
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,6 +23,10 @@ public class Quiz extends AppCompatActivity {
         buttonSubmit = findViewById(R.id.submit);
         buttonSubmit.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
+                // do the game
+                score = score+ 3;
+                ApplicationData.WriteScoreDb(score);
+
                 Intent intent = new Intent(buttonSubmit.getContext(), MainActivity.class);
                 startActivity(intent);
             }

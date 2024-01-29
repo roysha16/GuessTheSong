@@ -29,7 +29,7 @@ public class ApplicationData {
 
     ArrayList<Question> QuestionsList = new ArrayList<>();
     static ArrayList<Score> Scores = new ArrayList<>();
-    static Score lastGameScore = new Score(99,"roysha@ss.com","111","160606");
+    static Score lastGameScore = new Score();//99,"roysha@ss.com","111","160606");
 
     public ApplicationData() {
 
@@ -67,6 +67,7 @@ public class ApplicationData {
         //DatabaseReference dbQReference;
         DatabaseReference dbScoreReference;
 
+
         FirebaseAuth mAuth;
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -80,6 +81,10 @@ public class ApplicationData {
 
         Score nScore = new Score(newScore, currentUser.getEmail(), currentUser.getUid(),formattedDate );
 
+        //Save last game score
+        setLastScore(nScore);
+
+        //save on Database
         int sizeCurrentTable = Scores.size();
         int sizeMaxAllowedTable = MAX_SCORE_LIST;
         int indxOfMyScore = 0;
@@ -91,7 +96,7 @@ public class ApplicationData {
               //  if (i+1 < 5)
                 //    dbScoreReference.child(String.valueOf(i+1)).setValue(Scores.get(i));
                 //dbScoreReference.child(String.valueOf(i)).setValue(nScore);
-                // my score is better then what we have in the table
+                // my score is better than what we have in the table
                 break;
             }
         }
