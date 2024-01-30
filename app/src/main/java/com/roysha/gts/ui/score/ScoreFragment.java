@@ -33,7 +33,7 @@ public class ScoreFragment extends Fragment {
 
         binding = FragmentScoreBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        ListView simpleListView = binding.simpleListView;
+        ListView simpleListView = binding.highscoreListView;
         ArrayList list=new ArrayList<>();
         for(int i=0;i<ApplicationData.getScoreLen();i++){
             HashMap<String,String> item = new HashMap<String,String>();
@@ -46,7 +46,7 @@ public class ScoreFragment extends Fragment {
         }
 
         SimpleAdapter sa = new SimpleAdapter(getActivity(), list,
-                R.layout.activity_listview,
+                R.layout.activity_scorelistview,
                 new String[] { "line1","line2","line3"},
                 new int[] {R.id.line_a, R.id.line_b, R.id.line_c});
 

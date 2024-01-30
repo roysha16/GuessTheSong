@@ -51,7 +51,7 @@ public class GameFragment extends Fragment {
         binding = FragmentGameBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        ListView simpleListView = binding.simpleListView;
+        ListView simpleListView = binding.ScoreListView;
         ArrayList list=new ArrayList<>();
         for(int i=0;i<1;i++){
             HashMap<String,String> item = new HashMap<String,String>();
@@ -65,7 +65,7 @@ public class GameFragment extends Fragment {
         }
 
         SimpleAdapter sa = new SimpleAdapter(getActivity(), list,
-                R.layout.activity_listview,
+                R.layout.activity_scorelistview,
                 new String[] { "line1","line2","line3"},
                 new int[] {R.id.line_a, R.id.line_b, R.id.line_c});
 

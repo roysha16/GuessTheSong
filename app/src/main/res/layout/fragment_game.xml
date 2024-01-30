@@ -38,7 +38,7 @@
 
 
     <ListView
-        android:id="@+id/simpleListView"
+        android:id="@+id/ScoreListView"
         android:layout_width="wrap_content"
         android:layout_height="59dp"
         android:divider="@color/material_blue_grey_800"

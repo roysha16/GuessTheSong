@@ -20,7 +20,7 @@
         android:layout_margin="20dp" />
 
     <ListView
-        android:id="@+id/simpleListView"
+        android:id="@+id/highscoreListView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:divider="@color/material_blue_grey_800"
