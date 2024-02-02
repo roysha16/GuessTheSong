@@ -94,8 +94,15 @@ public class UpdateDBActivity extends AppCompatActivity {
         Button buttonUpdateDb = findViewById(R.id.UpdateQ);
         buttonUpdateDb.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                Intent intent = new Intent(buttonUpdateDb.getContext(), MainActivity.class);
-                startActivity(intent);
+               ApplicationData.WriteQuestionDb(tId.getText().toString(),
+                       tCA.getText().toString(), tId.getText().toString(),
+                       tA1.getText().toString(), tA2.getText().toString(),
+                       tA3.getText().toString(),tA4.getText().toString(),
+                       tQ.getText().toString());
+                Intent intent = getIntent();
+                finish();
+                startActivity(getIntent());
+                overridePendingTransition(0, 0);
             }
 
         });

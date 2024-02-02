@@ -1,6 +1,8 @@
 package com.roysha.gts;
 
 
+import android.widget.ListView;
+
 import androidx.annotation.NonNull;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -125,8 +127,7 @@ public class ApplicationData {
 
         }
     }
-    static public void WriteQuestionDb( String indx,
-             int CorrectAnswer, int id,
+    static public void WriteQuestionDb( String indx, String CorrectAnswer, String id,
              String A1, String A2, String A3, String A4, String Quest){
         FirebaseDatabase firebaseDatabase;
         // Reference for Firebase.
@@ -134,10 +135,10 @@ public class ApplicationData {
         firebaseDatabase = FirebaseDatabase.getInstance();
         dbQReference = firebaseDatabase.getReference("Questions");
 
-        //Question nQuestion = Question( CorrectAnswer,id, A1, A2, A3, A4, Quest);
+        Question nQuestion = new Question( Integer.valueOf(CorrectAnswer),Integer.valueOf(id), A1, A2, A3, A4, Quest);
 
 
-          //  dbQReference.child(indx).setValue(nQuestion);
+        dbQReference.child(indx).setValue(nQuestion);
 
     }
     public void InitDB() {
@@ -163,6 +164,10 @@ public class ApplicationData {
             }
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
+                Question question = dataSnapshot.getValue(Question.class);
+                String key = dataSnapshot.getKey();
+                int iKey = Integer.valueOf(key);
+                QuestionsList.set(iKey,question);
             }
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
