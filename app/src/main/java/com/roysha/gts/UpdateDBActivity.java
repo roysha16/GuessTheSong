@@ -101,8 +101,7 @@ public class UpdateDBActivity extends AppCompatActivity {
                        tQ.getText().toString());
                 Intent intent = getIntent();
                 finish();
-                startActivity(getIntent());
-                overridePendingTransition(0, 0);
+                startActivity(intent);
             }
 
         });

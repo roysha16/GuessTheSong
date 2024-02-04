@@ -31,10 +31,13 @@ public class ApplicationData {
 
     static ArrayList<Question> QuestionsList = new ArrayList<>();
     static ArrayList<Score> Scores = new ArrayList<>();
-    static Score lastGameScore = new Score(99,"roysha@ss.com","111","160606");
+    static Score lastGameScore = new Score(0,"","","");
 
     public ApplicationData() {
-
+        for(int i=0;i<4;i++) {
+            Question question = new Question(1, i, String.valueOf(i)+"a1", String.valueOf(i)+"a2", String.valueOf(i)+"a3", String.valueOf(i)+"a4", "error database"+String.valueOf(i));
+            QuestionsList.add(question);
+        }
     }
 
     static public Score getLastScore(){return lastGameScore;}
@@ -96,6 +99,9 @@ public class ApplicationData {
         String formattedDate = myDateObj.format(myFormatObj);
 
         Score nScore = new Score(newScore, currentUser.getEmail(), currentUser.getUid(),formattedDate );
+
+        // save locally the last game score
+        ApplicationData.setLastScore(nScore);
 
         int sizeCurrentTable = Scores.size();
         int sizeMaxAllowedTable = MAX_SCORE_LIST;
