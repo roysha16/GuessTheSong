@@ -119,7 +119,15 @@ public class Quiz extends AppCompatActivity {
                 AnswerGroup.clearCheck();
                 setRadioGroupStatus(true);
 
-                int rand = random.nextInt(LocalGameQuestionsList.size());
+                size = LocalGameQuestionsList.size();
+                if(size ==0)
+                {
+                    Toast.makeText(Quiz.this, "End Question List", Toast.LENGTH_SHORT).show();
+                    rc = GameStatus.EndOneQuestionWrong;
+                    break;
+
+                }
+                int rand = random.nextInt(size);
                 ans[0] = LocalGameQuestionsList.get(rand);
                 LocalGameQuestionsList.remove(rand);
 
