@@ -118,6 +118,7 @@ public class Quiz extends AppCompatActivity {
             case  GetNewQuestion:
                 AnswerGroup.clearCheck();
                 setRadioGroupStatus(true);
+                tvGameStatus.setBackgroundColor(getColor(R.color.black));
 
                 size = LocalGameQuestionsList.size();
                 if(size ==0)
@@ -154,23 +155,24 @@ public class Quiz extends AppCompatActivity {
                 buttonSubmit.setText("Submit Answer");
                 tvGameStatus.setText("In Middle Of Game");
 
-                Toast.makeText(Quiz.this, "Start New Game", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(Quiz.this, "Start New Game", Toast.LENGTH_SHORT).show();
                 rc = GameStatus.WaitingForAnswer;
 
                 break;
 
             case SubmitedAnswer:
-                Toast.makeText(Quiz.this, String.valueOf(radioButtonID) + " " + String.valueOf(position), Toast.LENGTH_SHORT).show();
+               // Toast.makeText(Quiz.this, String.valueOf(radioButtonID) + " " + String.valueOf(position), Toast.LENGTH_SHORT).show();
                 if(position == -1){
                     rc = GameStatus.WaitingForAnswer;
                     tvGameStatus.setText("Pick an answer");
-                    Toast.makeText(Quiz.this, "Pick Answer", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(Quiz.this, "Pick Answer", Toast.LENGTH_SHORT).show();
 
                     break;
                 }
                 if(position == (nextQuestion.CorrectAnswer-1))
                 {
                     tvGameStatus.setText("Currect Answer");
+                    tvGameStatus.setBackgroundColor(getColor(R.color.green));
                     Toast.makeText(Quiz.this, "Currect Answer", Toast.LENGTH_SHORT).show();
                     selectedButton.setBackgroundColor(getColor(R.color.green));
                     setRadioGroupStatus(false);
@@ -181,6 +183,7 @@ public class Quiz extends AppCompatActivity {
                     tvGameStatus.setText("Wrong Answer");
                     Toast.makeText(Quiz.this, "Wrong Answer", Toast.LENGTH_SHORT).show();
                     selectedButton.setBackgroundColor(getColor(R.color.red));
+                    tvGameStatus.setBackgroundColor(getColor(R.color.red));
                     setRadioGroupStatus(false);
                     buttonSubmit.setText("CloseGame");
                     rc = GameStatus.EndOneQuestionWrong;
