@@ -1,6 +1,8 @@
 package com.roysha.gts;
 
 
+import android.widget.ListView;
+
 import androidx.annotation.NonNull;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -18,7 +20,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
+import com.roysha.gts.Question;
 public class ApplicationData {
 
     ///Roysha test
@@ -27,16 +29,20 @@ public class ApplicationData {
 
 
 
-    ArrayList<Question> QuestionsList = new ArrayList<>();
+    static ArrayList<Question> QuestionsList = new ArrayList<>();
     static ArrayList<Score> Scores = new ArrayList<>();
-    static Score lastGameScore = new Score();//99,"roysha@ss.com","111","160606");
+    static Score lastGameScore = new Score(0,"","","");
 
     public ApplicationData() {
-
+        for(int i=0;i<4;i++) {
+            Question question = new Question(1, i, String.valueOf(i)+"a1", String.valueOf(i)+"a2", String.valueOf(i)+"a3", String.valueOf(i)+"a4", "error database"+String.valueOf(i),"url.com");
+            QuestionsList.add(question);
+        }
     }
 
     static public Score getLastScore(){return lastGameScore;}
     static public void setLastScore(Score newscore){lastGameScore=newscore;}
+    static ArrayList<Question> getQuestionsList(){return QuestionsList;}
 
     static public Score getScore(int indx) {
         Score rcScore = new Score(0, "", "", "");
@@ -44,6 +50,20 @@ public class ApplicationData {
             return rcScore;
 
         return Scores.get(indx);
+    }
+
+    static public boolean isUserAdmin() {
+        boolean rc = false;
+
+        FirebaseAuth Auth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = Auth.getCurrentUser();
+
+        if(currentUser != null)
+        {
+            if(currentUser.getEmail().compareTo("q@q.com")==0)
+                rc = true;
+        }
+        return rc;
     }
     static public int getScoreLen() {return Scores.size();}
 
@@ -67,7 +87,6 @@ public class ApplicationData {
         //DatabaseReference dbQReference;
         DatabaseReference dbScoreReference;
 
-
         FirebaseAuth mAuth;
         mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -81,10 +100,9 @@ public class ApplicationData {
 
         Score nScore = new Score(newScore, currentUser.getEmail(), currentUser.getUid(),formattedDate );
 
-        //Save last game score
-        setLastScore(nScore);
+        // save locally the last game score
+        ApplicationData.setLastScore(nScore);
 
-        //save on Database
         int sizeCurrentTable = Scores.size();
         int sizeMaxAllowedTable = MAX_SCORE_LIST;
         int indxOfMyScore = 0;
@@ -96,7 +114,7 @@ public class ApplicationData {
               //  if (i+1 < 5)
                 //    dbScoreReference.child(String.valueOf(i+1)).setValue(Scores.get(i));
                 //dbScoreReference.child(String.valueOf(i)).setValue(nScore);
-                // my score is better than what we have in the table
+                // my score is better then what we have in the table
                 break;
             }
         }
@@ -114,20 +132,20 @@ public class ApplicationData {
             nScore = scoreAfter;
 
         }
-     /*   if ((i==sizeCurrentTable) && (sizeCurrentTable < sizeMaxAllowedTable)) {
-            //Scores.add(nScore);
-            dbScoreReference.child(String.valueOf(i)).setValue(nScore);
+    }
+    static public void WriteQuestionDb( String indx, String CorrectAnswer, String id,
+             String A1, String A2, String A3, String A4, String Quest){
+        FirebaseDatabase firebaseDatabase;
+        // Reference for Firebase.
+        DatabaseReference dbQReference;
+        firebaseDatabase = FirebaseDatabase.getInstance();
+        dbQReference = firebaseDatabase.getReference("Questions");
 
-        }*/
-        //dbScoreReference.setValue(Scores);
+        Question nQuestion = new Question( Integer.valueOf(CorrectAnswer),Integer.valueOf(id), A1, A2, A3, A4, Quest,"url.com");
 
 
-        //   Map<String, Question> Qs = new HashMap<>();
-    //    Qs.put("1", new  Question(2, "Question 1?", "Question 2?", "Question 3?", "Question 4?"));
-    //    Qs.put("2", new  Question(3, "Question 21?", "Question 22?", "Question 3?", "Question 4?"));
-        //  dbQReference.setValue(Qs);
-     //   Question Quest1 = new Question(4, "Question4 1?", "Question4 2?", "Qu4estion 3?", "Question 4?");
-      //  dbQReference.child("4").setValue(Quest1);
+        dbQReference.child(indx).setValue(nQuestion);
+
     }
     public void InitDB() {
         FirebaseDatabase firebaseDatabase;
@@ -152,6 +170,10 @@ public class ApplicationData {
             }
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
+                Question question = dataSnapshot.getValue(Question.class);
+                String key = dataSnapshot.getKey();
+                int iKey = Integer.valueOf(key);
+                QuestionsList.set(iKey,question);
             }
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {

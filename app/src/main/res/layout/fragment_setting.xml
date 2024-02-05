@@ -25,18 +25,32 @@
         app:layout_constraintVertical_bias="0.893" />
 
     <TextView
-    android:id="@+id/Email"
-    android:layout_width="100dp"
-    android:layout_height="40dp"
-    android:text=""
-    android:textColor="@color/purple_200"
-    android:textSize="18sp"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintHorizontal_bias="0.032"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintVertical_bias="0.893" />
+        android:id="@+id/Email"
+        android:layout_width="354dp"
+        android:layout_height="40dp"
+        android:text=""
+        android:textColor="@color/purple_200"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.032"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.893" />
+
+    <TextView
+        android:id="@+id/UserType"
+        android:layout_width="354dp"
+        android:layout_height="40dp"
+        android:text=""
+        android:textColor="@color/purple_200"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.032"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.893" />
 
 
     <Button
@@ -46,5 +60,13 @@
         android:text="Logout"
         android:layout_below="@id/choices_layout"
         android:layout_marginTop="40dp"/>
+
+    <Button
+        android:id="@+id/UpdateDB"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/choices_layout"
+        android:layout_marginTop="40dp"
+        android:text="Update DB (Only Admin)" />
 
 </LinearLayout>

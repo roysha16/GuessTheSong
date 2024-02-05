@@ -2,7 +2,7 @@ package com.roysha.gts;
 
 import java.util.HashMap;
 import java.util.Map;
-
+import java.util.Random;
 public class Question {
 
     //Firebase require  to have public variables or getter/setter.
@@ -16,6 +16,47 @@ public class Question {
     public String Song;
 
     public Question(){
+
+    }
+    // Constractor to build random answer
+    public  Question(Question currectAns,Question ans2,Question ans3, Question ans4)
+    {
+        String tmpString;
+        Random random = new Random();
+        int rand = random.nextInt(4)+1;
+        this.A1 = "*" + currectAns.A1;
+        this.A2 = ans2.A1;
+        this.A3 = ans3.A1;
+        this.A4 = ans4.A1;
+        this.Question= currectAns.Question;
+        this.id = currectAns.id;
+        this.CorrectAnswer = rand;
+
+        // put the right answer in random place
+
+        switch(CorrectAnswer) {
+            case 1:
+                //do nothing;
+            break;
+
+            case 2:
+                tmpString = A2;
+                A2 = A1;
+                A1 = tmpString;
+            break;
+
+            case 3:
+                tmpString = A3;
+                A3 = A1;
+                A1 = tmpString;
+            break;
+
+            case 4:
+                tmpString = A4;
+                A4 = A1;
+                A1 = tmpString;
+            break;
+        }
 
     }
     public Question(int CorrectAnswer,int id, String A1, String A2, String A3, String A4, String Question,String Song){

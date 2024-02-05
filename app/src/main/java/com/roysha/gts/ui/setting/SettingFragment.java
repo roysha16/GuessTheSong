@@ -16,17 +16,21 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.roysha.gts.ApplicationData;
 import com.roysha.gts.Login;
 import com.roysha.gts.MainActivity;
 import com.roysha.gts.R;
 import com.roysha.gts.Splash;
+import com.roysha.gts.UpdateDBActivity;
 import com.roysha.gts.databinding.FragmentSettingBinding;
+import android.widget.SimpleAdapter;
 
 public class SettingFragment extends Fragment {
 
     private FragmentSettingBinding binding;
     FirebaseAuth mAuth;
     Button buttonLogout;
+    Button buttonUpdateDb;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -47,6 +51,15 @@ public class SettingFragment extends Fragment {
             textViewEmail.setText("");
         }
 
+        final TextView textViewUserType = binding.UserType;
+
+        if (ApplicationData.isUserAdmin()) {
+            textViewUserType.setText("User is Admin");
+        } else
+        {
+            textViewUserType.setText("User is Regular");
+        }
+
 
         buttonLogout = binding.Logout;
         View root = binding.getRoot();
@@ -61,6 +74,17 @@ public class SettingFragment extends Fragment {
 
                 }
             }
+        });
+
+        buttonUpdateDb = binding.UpdateDB;
+        buttonUpdateDb.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                if (ApplicationData.isUserAdmin()) {
+                    Intent intent = new Intent(buttonUpdateDb.getContext(), UpdateDBActivity.class);
+                    startActivity(intent);
+                }
+            }
+
         });
 
 
