@@ -13,11 +13,12 @@ public class Question {
     public String A3;
     public String A4;
     public String Question;
+    public String Song;
 
     public Question(){
 
     }
-    public Question(int CorrectAnswer,int id, String A1, String A2, String A3, String A4, String Question){
+    public Question(int CorrectAnswer,int id, String A1, String A2, String A3, String A4, String Question,String Song){
         this.A1 = A1;
         this.A2 = A2;
         this.A3 = A3;
@@ -25,6 +26,7 @@ public class Question {
         this.Question= Question;
         this.id = id;
         this.CorrectAnswer = CorrectAnswer;
+        this.Song = Song;
     }
     public String getQuestion(int Id){
         String ReturnQ = "";
@@ -45,6 +47,10 @@ public class Question {
                 break;
         }
         return ReturnQ;
+    }
+    public String SongGetter()
+    {
+        return this.Song;
     }
 
     int getCorrectAnswer(){

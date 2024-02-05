@@ -6,7 +6,8 @@
     "A1": "רוב השעות - עידן רייכל",
     "A2": "A2",
     "A3": "A3",
-    "A4": "A4"
+    "A4": "A4",
+    "Song": "https://youtu.be/VrAAhWs4siI"
 
   },
   {
@@ -16,7 +17,8 @@
     "A1": "תם ולא נשלם - עילי בוטנר וילדי החוץ",
     "A2": "A22",
     "A3": "A23",
-    "A4": "A24"
+    "A4": "A24",
+    "Song": "https://youtu.be/XocnNMuZ_c0?si=87fE8KsIOw7uEFJ0"
   },
   {
     "id": 3,
@@ -25,7 +27,8 @@
     "A1": "שיר בבוקר בבוקר - שלמה ארצי",
     "A2": "A22",
     "A3": "A23",
-    "A4": "A24"
+    "A4": "A24",
+    "Song": "https://youtu.be/Big-1vigRM0?si=1qgOL_pRh0s0cuek"
   },
   {
   "id": 4,
@@ -34,7 +37,8 @@
   "A1": "מתנות קטנות - רמי קליינשטיין",
   "A2": "A22",
   "A3": "A23",
-  "A4": "A24"
+  "A4": "A24",
+    "Song": "https://youtu.be/pn_p5_8taxg?si=OdOb9prEuvR8Q4ep"
   },
   {
     "id": 5,
@@ -43,6 +47,7 @@
     "A1": "איך שיר נולד - הכבש השישה עשר",
     "A2": "A22",
     "A3": "A23",
-    "A4": "A24"
+    "A4": "A24",
+    "Song": "https://youtu.be/uAtpJBD1vuQ?si=HUoFfkK6YaMcOPmx"
   }
 ]

@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 public class Quiz extends AppCompatActivity {
@@ -25,7 +26,8 @@ public class Quiz extends AppCompatActivity {
             public void onClick(View view) {
                 // do the game
                 score = score+ 3;
-                ApplicationData.WriteScoreDb(score);
+                ApplicationData.WriteScoreDb(score);;
+
 
                 Intent intent = new Intent(buttonSubmit.getContext(), MainActivity.class);
                 startActivity(intent);
