@@ -31,6 +31,7 @@ public class Question {
         this.Question= currectAns.Question;
         this.id = currectAns.id;
         this.CorrectAnswer = rand;
+        this.Song = currectAns.Song;
 
         // put the right answer in random place
 

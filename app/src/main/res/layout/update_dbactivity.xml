@@ -99,6 +99,7 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/A2"
             android:layout_width="match_parent"
@@ -149,6 +150,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Currect Answer"
+            android:textSize="10sp" />
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/Song"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Currect Answer url"
             android:textSize="10sp" />
 
         <Space

@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.FirebaseUserMetadata;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,6 +32,7 @@ public class ApplicationData {
 
     static ArrayList<Question> QuestionsList = new ArrayList<>();
     static ArrayList<Score> Scores = new ArrayList<>();
+    static ArrayList<String> AdminList = new ArrayList<>();
     static Score lastGameScore = new Score(0,"","","");
 
     public ApplicationData() {
@@ -60,8 +62,11 @@ public class ApplicationData {
 
         if(currentUser != null)
         {
-            if(currentUser.getEmail().compareTo("q@q.com")==0)
-                rc = true;
+            for(int i=0;i<AdminList.size() && !rc;i++) {
+                if (currentUser.getEmail().compareTo(AdminList.get(i)) == 0)
+                    rc = true;
+            }
+
         }
         return rc;
     }
@@ -152,10 +157,13 @@ public class ApplicationData {
         // Reference for Firebase.
         DatabaseReference dbQReference;
         DatabaseReference dbScoreReference;
+        DatabaseReference dbAdminReference;
+
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         dbQReference = firebaseDatabase.getReference("Questions");
         dbScoreReference = firebaseDatabase.getReference("Scores");
+        dbAdminReference = firebaseDatabase.getReference("Admin");
 
 
         dbQReference.addChildEventListener(new ChildEventListener() {
@@ -220,6 +228,34 @@ public class ApplicationData {
             public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
                 Score score = dataSnapshot.getValue(Score.class);
                 String key = dataSnapshot.getKey();
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+        dbAdminReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
+                String usr = dataSnapshot.getValue(String.class);
+                if(previousChildName == null)
+                    AdminList.clear();
+                //  QuestionsList.add(dataSnapshot.getKey(),question);
+                AdminList.add(usr);
+
+            }
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
+                String usr = dataSnapshot.getValue(String.class);
+                String key = dataSnapshot.getKey();
+                int iKey = Integer.valueOf(key);
+                AdminList.set(iKey,usr);
+            }
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {

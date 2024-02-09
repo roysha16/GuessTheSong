@@ -1,11 +1,15 @@
 package com.roysha.gts;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.UserHandle;
 import android.text.TextUtils;
@@ -13,14 +17,21 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.MediaController;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
+
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.ArrayList;
@@ -91,7 +102,7 @@ public class Quiz extends AppCompatActivity {
 
     Question nextQuestion;
 
-    GameStatus gameFlow(GameStatus nextStep, GameEvent event) {
+    GameStatus gameFlow(View view,GameStatus nextStep, GameEvent event) {
         //return value indicate if we still in game or it's game over
         GameStatus rc = GameStatus.None;
         int radioButtonID = AnswerGroup.getCheckedRadioButtonId();
@@ -176,6 +187,9 @@ public class Quiz extends AppCompatActivity {
                     Toast.makeText(Quiz.this, "Currect Answer", Toast.LENGTH_SHORT).show();
                     selectedButton.setBackgroundColor(getColor(R.color.green));
                     setRadioGroupStatus(false);
+                    CreatePopUpVideoMusic(view,nextQuestion.Question,nextQuestion.getQuestion(nextQuestion.CorrectAnswer), nextQuestion.Song);
+                   // CreatePopUpVideoMusic(view,"https://www.youtube.com/embed/skVg5FlVKS0");
+
                     buttonSubmit.setText("Get New Question");
 
                     rc = GameStatus.EndOneQuestionCurrect;
@@ -185,6 +199,7 @@ public class Quiz extends AppCompatActivity {
                     selectedButton.setBackgroundColor(getColor(R.color.red));
                     tvGameStatus.setBackgroundColor(getColor(R.color.red));
                     setRadioGroupStatus(false);
+                    CreatePopUpVideoMusic(view,nextQuestion.Question,"try again, maybe next time ..", "https://youtu.be/AdqxnVkQ6-U");
                     buttonSubmit.setText("CloseGame");
                     rc = GameStatus.EndOneQuestionWrong;
                 }
@@ -202,6 +217,61 @@ public class Quiz extends AppCompatActivity {
             ((RadioButton)AnswerGroup.getChildAt(i)).setEnabled(isEnabled);
         }
     }
+
+    void CreatePopUpVideoMusic(View view, String question, String answer, String url) {
+        // New Activiy in full view
+        //   startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(uriString)));
+        //   Toast.makeText(Quiz.this, "Playing Video", Toast.LENGTH_SHORT).show();
+
+        //   Toast.makeText(Quiz.this, "Playing Video", Toast.LENGTH_SHORT).show();
+
+
+        // inflate the layout of the popup window
+        LayoutInflater inflater = (LayoutInflater)
+                getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView = inflater.inflate(R.layout.popup_window_music, null);
+
+         TextView TVQuestion = popupView.findViewById(R.id.textViewQuestion);
+        TVQuestion.setText(question);
+
+         TextView TVAnswer = popupView.findViewById(R.id.textViewAnswer);
+        TVAnswer.setText(answer);
+
+
+
+        WebView webView = popupView.findViewById(R.id.simpleWebView);
+        WebSettings webSettings = webView.getSettings();
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.setWebChromeClient(new WebChromeClient());
+        webView.setWebViewClient(new WebViewClient());
+
+
+
+        // create the popup window
+        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        boolean focusable = true; // lets taps outside the popup also dismiss it
+        final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+
+        // show the popup window
+        // which view you pass in doesn't matter, it is only used for the window tolken
+        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+
+
+        webView.loadUrl(url+"&mute=0");
+
+        // dismiss the popup window when touched
+        popupView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+               // simpleVideoView.stopPlayback();
+                popupWindow.dismiss();
+                return true;
+            }
+        });
+
+
+    }
         protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
@@ -217,7 +287,18 @@ public class Quiz extends AppCompatActivity {
         tvGameStatus = findViewById(R.id.GameStatus);
         //buttonSubmit.setText("Submit");
 
-        currentGameStatus = gameFlow(GameStatus.None,GameEvent.StartNewGame);
+        currentGameStatus = gameFlow(this.getCurrentFocus(),GameStatus.None,GameEvent.StartNewGame);
+
+            // GetContent creates an ActivityResultLauncher<String> to let you pass
+// in the mime type you want to let the user select
+            ActivityResultLauncher<String> mGetContent = registerForActivityResult(new ActivityResultContracts.GetContent(),
+                    new ActivityResultCallback<Uri>() {
+                        @Override
+                        public void onActivityResult(Uri uri) {
+                            Toast.makeText(Quiz.this, "onActivityResult", Toast.LENGTH_SHORT).show();
+                            // Handle the returned Uri
+                        }
+                    });
 
 
 
@@ -261,10 +342,10 @@ public class Quiz extends AppCompatActivity {
                     case None:
                     case WaitingForAnswer:
 
-                        currentGameStatus = gameFlow(GameStatus.WaitingForAnswer,GameEvent.SubmitedAnswer);
+                        currentGameStatus = gameFlow(view, GameStatus.WaitingForAnswer,GameEvent.SubmitedAnswer);
                         break;
                    case EndOneQuestionCurrect:
-                       currentGameStatus = gameFlow(GameStatus.WaitingForAnswer,GameEvent.GetNewQuestion);
+                       currentGameStatus = gameFlow(view, GameStatus.WaitingForAnswer,GameEvent.GetNewQuestion);
                        CurrentGameScore +=5;
                        CurrentGameIndex +=1;
                        tvScore.setText(String.valueOf(CurrentGameScore));
@@ -283,90 +364,10 @@ public class Quiz extends AppCompatActivity {
                         break;
                 }
 
-               // if (isGameIsOnGoing == false) {
-
-                    /*  Intent intent = new Intent(buttonSubmit.getContext(), MainActivity.class);
-                    startActivity(intent);
-                    ApplicationData.WriteScoreDb(CurrentGameScore);
-                    CurrentGameScore = 0;
-*/
-             //   }
 
             }
         });
     }
 }
 
-// Old POP up code
-/*
-                // inflate the layout of the popup window
-                LayoutInflater inflater = (LayoutInflater)
-                        getSystemService(LAYOUT_INFLATER_SERVICE);
-                View popupView = inflater.inflate(R.layout.popup_window, null);
 
-                TextView TVQuestion = popupView.findViewById(R.id.textViewQuestion);
-
-                TextView TVAnswer = popupView.findViewById(R.id.textViewAnswer);
-                TextView TVScore = popupView.findViewById(R.id.textViewScore);
-
-                TVQuestion.setText(gameQuestion);
-                TVAnswer.setText(gameAnswer);
-                TVScore.setText(String.valueOf(CurrentGameScore));
-                ConstraintLayout cl = (ConstraintLayout)popupView.findViewById(R.id.popup_window);
-
-                if(DidUserFindCurrectAnswer) {
-                    cl.setBackgroundColor(0xFF000000);
-
-
-                }
-               if(DidUserFindCurrectAnswer) {
-
-                   cl.setBackgroundColor(getColor(R.color.green));//null));
-                    //cl.setBackgroundColor(0xff10b566);
-                //    popupView.setBackgroundColor(0xff10b566);
-
-
-                }
-                else {
-                   // cl.setBackgroundColor(0xffe72a16);
-                   cl.setBackgroundColor(getColor(R.color.red));//,null));
-
-                 //   popupView.setBackgroundColor(R.color.red);
-
-                }
-
-
-                // create the popup window
-                int width = LinearLayout.LayoutParams.WRAP_CONTENT;
-                int height = LinearLayout.LayoutParams.WRAP_CONTENT;
-                boolean focusable = true; // lets taps outside the popup also dismiss it
-
-                final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
-
-
-
-
-                // show the popup window
-                // which view you pass in doesn't matter, it is only used for the window tolken
-                popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
-
-                // dismiss the popup window when touched
-                popupView.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        popupWindow.dismiss();
-                        buttonSubmit.setText("Submit");
-                        if(isGameIsOnGoing == false) {
-                            Intent intent = new Intent(popupView.getContext(), MainActivity.class);
-                            startActivity(intent);
-                            ApplicationData.WriteScoreDb(CurrentGameScore);
-                            finish();
-
-                        }
-                        return true;
-                    }
-                });
-
-                return  rc;
-
-            }*/
