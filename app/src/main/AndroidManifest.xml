@@ -18,9 +18,6 @@
             android:name=".UpdateDBActivity"
             android:exported="false" />
         <activity
-            android:name=".Admin"
-            android:exported="false" />
-        <activity
             android:name=".Quiz"
             android:exported="false" />
         <activity

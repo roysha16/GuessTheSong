@@ -19,19 +19,19 @@ public class Question {
 
     }
     // Constractor to build random answer
-    public  Question(Question currectAns,Question ans2,Question ans3, Question ans4)
+    public  Question(Question correctAns,Question ans2,Question ans3, Question ans4)
     {
         String tmpString;
         Random random = new Random();
         int rand = random.nextInt(4)+1;
-        this.A1 = "*" + currectAns.A1;
+        this.A1 = "*" + correctAns.A1;
         this.A2 = ans2.A1;
         this.A3 = ans3.A1;
         this.A4 = ans4.A1;
-        this.Question= currectAns.Question;
-        this.id = currectAns.id;
+        this.Question= correctAns.Question;
+        this.id = correctAns.id;
         this.CorrectAnswer = rand;
-        this.Song = currectAns.Song;
+        this.Song = correctAns.Song;
 
         // put the right answer in random place
 

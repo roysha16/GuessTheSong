@@ -18,7 +18,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginRight="16dp"
         android:text="This is the question"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -33,23 +33,41 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
         android:text="This is a the answer"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
 
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewQuestion" />
 
+
     <WebView
         android:id="@+id/simpleWebView"
-        android:layout_width="350dp"
-        android:layout_height="350dp"
+        android:layout_width="344dp"
+        android:layout_height="285dp"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@color/purple_200"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewAnswer" />
 
+    <Button
+        android:id="@+id/CloseBtn"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/choices_layout"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="20dp"
+
+        android:layout_marginRight="16dp"
+        android:gravity="center"
+        android:text="Close Window"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/simpleWebView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

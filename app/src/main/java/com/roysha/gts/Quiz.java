@@ -34,6 +34,9 @@ import android.widget.VideoView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -61,7 +64,7 @@ public class Quiz extends AppCompatActivity {
         WaitingForAnswer,
 
 
-        EndOneQuestionCurrect,
+        EndOneQuestionCorrect,
         EndOneQuestionWrong,
 
         GameOver
@@ -72,7 +75,7 @@ public class Quiz extends AppCompatActivity {
         GetNewQuestion,
         SubmitedAnswer,
 
-        CurrectAnswer,
+        CorrectAnswer,
         WrongAnswer
     }
 
@@ -86,14 +89,14 @@ public class Quiz extends AppCompatActivity {
       State: GetNewQuestion
             1. GetRandom Question from local game Question Array.
             2. Remove Question from local game Question Array.
-            3. Make random answers for current question
+            3. Make random answers for corrent question
             4. update UI with questions, and button action = "Submit"
             --> Move to "WaitingForAnswer"
 
      State: WaitingForAnswer
             1. If not selected - do nothing
-            2. If selected == question.currectanswer
-                --> Move to "EndOneQuestionCurrect"
+            2. If selected == question.correctanswer
+                --> Move to "EndOneQuestionCorrect"
 
 
      */
@@ -113,7 +116,7 @@ public class Quiz extends AppCompatActivity {
 
         int size;
 
-        boolean DidUserFindCurrectAnswer = false;
+        boolean DidUserFindCorrectAnswer = false;
 
                // Level myVar = Level.MEDIUM;
 
@@ -135,6 +138,9 @@ public class Quiz extends AppCompatActivity {
                 if(size ==0)
                 {
                     Toast.makeText(Quiz.this, "End Question List", Toast.LENGTH_SHORT).show();
+                    CreatePopUpVideoMusic(view,"You are the Winner","No More Questions in DB", "https://www.youtube.com/embed/RNiflDIWtsk");
+
+
                     rc = GameStatus.EndOneQuestionWrong;
                     break;
 
@@ -148,7 +154,16 @@ public class Quiz extends AppCompatActivity {
                 for(int i=0;i<size;i++) {
                     LocalGameAnswerList.add( ApplicationData.getQuestionsList().get(i));
                 }
-                LocalGameAnswerList.remove(rand);
+                // we need to find the index of the next question in the global answer list
+                int questionId = ans[0].id;
+                for(int i=0;i<size;i++) {
+                    if(questionId == LocalGameAnswerList.get(i).id) {
+                        /// found the correct question and remove it from answerList
+                        LocalGameAnswerList.remove(i);
+                        break;
+                    }
+
+                }
 
                 for(int i=0;i<3;i++){
                     rand = random.nextInt(LocalGameAnswerList.size());
@@ -182,24 +197,28 @@ public class Quiz extends AppCompatActivity {
                 }
                 if(position == (nextQuestion.CorrectAnswer-1))
                 {
-                    tvGameStatus.setText("Currect Answer");
+                    tvGameStatus.setText("Correct Answer");
                     tvGameStatus.setBackgroundColor(getColor(R.color.green));
-                    Toast.makeText(Quiz.this, "Currect Answer", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Quiz.this, "Correct Answer", Toast.LENGTH_SHORT).show();
                     selectedButton.setBackgroundColor(getColor(R.color.green));
                     setRadioGroupStatus(false);
+                    CurrentGameScore +=5;
+                    CurrentGameIndex +=1;
+                    tvScore.setText(String.valueOf(CurrentGameScore));
+                    tvIndex.setText(String.valueOf(CurrentGameIndex));
                     CreatePopUpVideoMusic(view,nextQuestion.Question,nextQuestion.getQuestion(nextQuestion.CorrectAnswer), nextQuestion.Song);
                    // CreatePopUpVideoMusic(view,"https://www.youtube.com/embed/skVg5FlVKS0");
 
                     buttonSubmit.setText("Get New Question");
 
-                    rc = GameStatus.EndOneQuestionCurrect;
+                    rc = GameStatus.EndOneQuestionCorrect;
                 } else {
                     tvGameStatus.setText("Wrong Answer");
                     Toast.makeText(Quiz.this, "Wrong Answer", Toast.LENGTH_SHORT).show();
                     selectedButton.setBackgroundColor(getColor(R.color.red));
                     tvGameStatus.setBackgroundColor(getColor(R.color.red));
                     setRadioGroupStatus(false);
-                    CreatePopUpVideoMusic(view,nextQuestion.Question,"try again, maybe next time ..", "https://youtu.be/AdqxnVkQ6-U");
+                    CreatePopUpVideoMusic(view,nextQuestion.Question,"try again, maybe next time ..", "https://www.youtube.com/embed/s5B188EFlvE?si=OfRp8og6Gl5Nd5eJ");
                     buttonSubmit.setText("CloseGame");
                     rc = GameStatus.EndOneQuestionWrong;
                 }
@@ -238,14 +257,34 @@ public class Quiz extends AppCompatActivity {
         TVAnswer.setText(answer);
 
 
-
         WebView webView = popupView.findViewById(R.id.simpleWebView);
-        WebSettings webSettings = webView.getSettings();
+       WebSettings webSettings = webView.getSettings();
         webView.getSettings().setJavaScriptEnabled(true);
+
         webView.setWebChromeClient(new WebChromeClient());
+       // webView.setWebViewClient(new WebViewClient());
+      //0  webView.loadUrl(url);
+
+        /////-----
+/*
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.setWebChromeClient(new WebChromeClient() {
+
+        } );
+
+
+
         webView.setWebViewClient(new WebViewClient());
+        // videoWeb.loadData( "<iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/eWEF1Zrmdow\" frameborder=\"0\" allowfullscreen></iframe>",  "text/html" , "utf-8" );
+        // String data = "<iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/AdqxnVkQ6-U\" frameborder=\"0\" allowfullscreen ;allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\"></iframe>";
+        //  String url = "https://www.youtube.com/embed/AdqxnVkQ6-U/?autoplay=1";
+        //String url = "https://www.youtube.com/embed/M7lc1UVf-VE?autoplay=1";*/
+        String data = "<iframe width=\"100%\" height=\"100%\" src=" + url +
+                " title=\"RoySha video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" allowfullscreen></iframe>";
+        webView.loadData( data,  "text/html" , "utf-8" );
 
 
+//////*/
 
         // create the popup window
         int width = LinearLayout.LayoutParams.WRAP_CONTENT;
@@ -257,8 +296,8 @@ public class Quiz extends AppCompatActivity {
         // which view you pass in doesn't matter, it is only used for the window tolken
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
 
-
-        webView.loadUrl(url+"&mute=0");
+       // url = url + "/mute=0";
+     //0000   webView.loadUrl(url);
 
         // dismiss the popup window when touched
         popupView.setOnTouchListener(new View.OnTouchListener() {
@@ -267,6 +306,14 @@ public class Quiz extends AppCompatActivity {
                // simpleVideoView.stopPlayback();
                 popupWindow.dismiss();
                 return true;
+            }
+        });
+        Button closeButton = popupView.findViewById(R.id.CloseBtn);
+
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                popupWindow.dismiss();
+
             }
         });
 
@@ -344,12 +391,8 @@ public class Quiz extends AppCompatActivity {
 
                         currentGameStatus = gameFlow(view, GameStatus.WaitingForAnswer,GameEvent.SubmitedAnswer);
                         break;
-                   case EndOneQuestionCurrect:
+                   case EndOneQuestionCorrect:
                        currentGameStatus = gameFlow(view, GameStatus.WaitingForAnswer,GameEvent.GetNewQuestion);
-                       CurrentGameScore +=5;
-                       CurrentGameIndex +=1;
-                       tvScore.setText(String.valueOf(CurrentGameScore));
-                       tvIndex.setText(String.valueOf(CurrentGameIndex));
 
                        break;
 

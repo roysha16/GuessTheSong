@@ -7,18 +7,18 @@
     "A2": "A2",
     "A3": "A3",
     "A4": "A4",
-    "Song": "https://youtu.be/VrAAhWs4siI"
+    "Song": "https://www.youtube.com/embed/qD4mkJiQPKY"
 
   },
   {
     "id": 2,
-    "Question": "ברוב הימים שברחו לנו הייתה איתי והייתי איתה",
+    "Question": "אני בורח ונוסע אליך, וכל חלום הוא כמו ניצוץ בעינייך",
     "CorrectAnswer": 1,
     "A1": "תם ולא נשלם - עילי בוטנר וילדי החוץ",
     "A2": "A22",
     "A3": "A23",
     "A4": "A24",
-    "Song": "https://youtu.be/XocnNMuZ_c0?si=87fE8KsIOw7uEFJ0"
+    "Song": "https://www.youtube.com/embed/XocnNMuZ_c0"
   },
   {
     "id": 3,
@@ -28,7 +28,7 @@
     "A2": "A22",
     "A3": "A23",
     "A4": "A24",
-    "Song": "https://youtu.be/Big-1vigRM0?si=1qgOL_pRh0s0cuek"
+    "Song": "https://www.youtube.com/embed/ShwuARNjeIs"
   },
   {
     "id": 4,
@@ -38,7 +38,7 @@
     "A2": "A22",
     "A3": "A23",
     "A4": "A24",
-    "Song": "https://youtu.be/pn_p5_8taxg?si=OdOb9prEuvR8Q4ep"
+    "Song": "https://www.youtube.com/embed/yzmdj7eqin8"
   },
   {
     "id": 5,
@@ -48,6 +48,6 @@
     "A2": "A22",
     "A3": "A23",
     "A4": "A24",
-    "Song": "https://youtu.be/uAtpJBD1vuQ?si=HUoFfkK6YaMcOPmx"
+    "Song": "https://www.youtube.com/embed/8lJJlHKQgoE"
   }
 ]
