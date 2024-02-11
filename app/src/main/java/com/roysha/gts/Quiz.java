@@ -280,7 +280,7 @@ public class Quiz extends AppCompatActivity {
 
 
 
-        webView.setWebViewClient(new WebViewClient());
+
         // videoWeb.loadData( "<iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/eWEF1Zrmdow\" frameborder=\"0\" allowfullscreen></iframe>",  "text/html" , "utf-8" );
         // String data = "<iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/AdqxnVkQ6-U\" frameborder=\"0\" allowfullscreen ;allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\"></iframe>";
         //  String url = "https://www.youtube.com/embed/AdqxnVkQ6-U/?autoplay=1";
@@ -292,6 +292,7 @@ public class Quiz extends AppCompatActivity {
             webView.loadData(data, "text/html", "utf-8");
         }
         else{
+            webView.setWebViewClient(new WebViewClient());
             webView.loadUrl(url);
         }
 
@@ -319,6 +320,32 @@ public class Quiz extends AppCompatActivity {
                // simpleVideoView.stopPlayback();
                 popupWindow.dismiss();
                 return true;
+            }
+        });
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+
+            @Override
+            public void onDismiss() {
+                // TODO Auto-generated method stub
+                switch (currentGameStatus) {
+
+
+                    case None:
+                    case WaitingForAnswer:
+                    case EndOneQuestionCorrect:
+                    case GameOver:
+                    case EndOneQuestionWrong:
+                        break;
+                    case EndGameNoQuestions:
+                        Intent intent = new Intent(buttonSubmit.getContext(), MainActivity.class);
+                        startActivity(intent);
+                        ApplicationData.WriteScoreDb(CurrentGameScore);
+                        CurrentGameScore = 0;
+                        CurrentGameIndex = 1;
+                        finish();
+                        break;
+                }
+
             }
         });
         Button closeButton = popupView.findViewById(R.id.CloseBtn);
