@@ -67,6 +67,8 @@ public class Quiz extends AppCompatActivity {
         EndOneQuestionCorrect,
         EndOneQuestionWrong,
 
+        EndGameNoQuestions,
+
         GameOver
 
     }
@@ -139,9 +141,10 @@ public class Quiz extends AppCompatActivity {
                 {
                     Toast.makeText(Quiz.this, "End Question List", Toast.LENGTH_SHORT).show();
                     CreatePopUpVideoMusic(view,"You are the Winner","No More Questions in DB", "https://www.youtube.com/embed/RNiflDIWtsk");
+                    buttonSubmit.setText("Start New Game");
+                    tvGameStatus.setText("You are the Winner!!!!");
 
-
-                    rc = GameStatus.EndOneQuestionWrong;
+                    rc = GameStatus.EndGameNoQuestions;
                     break;
 
                 }
@@ -210,6 +213,7 @@ public class Quiz extends AppCompatActivity {
                    // CreatePopUpVideoMusic(view,"https://www.youtube.com/embed/skVg5FlVKS0");
 
                     buttonSubmit.setText("Get New Question");
+                 //   mGetContent.launch("image/*");
 
                     rc = GameStatus.EndOneQuestionCorrect;
                 } else {
@@ -221,6 +225,8 @@ public class Quiz extends AppCompatActivity {
                     CreatePopUpVideoMusic(view,nextQuestion.Question,"try again, maybe next time ..", "https://www.youtube.com/embed/s5B188EFlvE?si=OfRp8og6Gl5Nd5eJ");
                     buttonSubmit.setText("CloseGame");
                     rc = GameStatus.EndOneQuestionWrong;
+                   // mGetContent.launch("video/*");
+
                 }
 
 
@@ -281,7 +287,14 @@ public class Quiz extends AppCompatActivity {
         //String url = "https://www.youtube.com/embed/M7lc1UVf-VE?autoplay=1";*/
         String data = "<iframe width=\"100%\" height=\"100%\" src=" + url +
                 " title=\"RoySha video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" allowfullscreen></iframe>";
-        webView.loadData( data,  "text/html" , "utf-8" );
+
+        if (url.contains("embed")) {
+            webView.loadData(data, "text/html", "utf-8");
+        }
+        else{
+            webView.loadUrl(url);
+        }
+
 
 
 //////*/
@@ -319,6 +332,22 @@ public class Quiz extends AppCompatActivity {
 
 
     }
+
+    ActivityResultLauncher<String> mGetContent = registerForActivityResult(new ActivityResultContracts.GetContent(),
+            new ActivityResultCallback<Uri>() {
+                @Override
+                public void onActivityResult(Uri uri) {
+                    // Handle the returned Uri
+                }
+            });
+   /* ActivityResultLauncher<String> mGetContent = registerForActivityResult(new ActivityResultContracts.GetContent(),
+            new ActivityResultCallback<Uri>() {
+                @Override
+                public void onActivityResult(Uri uri) {
+                    Toast.makeText(Quiz.this, "onActivityResult", Toast.LENGTH_SHORT).show();
+                    // Handle the returned Uri
+                }
+            });*/
         protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
@@ -334,18 +363,12 @@ public class Quiz extends AppCompatActivity {
         tvGameStatus = findViewById(R.id.GameStatus);
         //buttonSubmit.setText("Submit");
 
+
         currentGameStatus = gameFlow(this.getCurrentFocus(),GameStatus.None,GameEvent.StartNewGame);
 
             // GetContent creates an ActivityResultLauncher<String> to let you pass
 // in the mime type you want to let the user select
-            ActivityResultLauncher<String> mGetContent = registerForActivityResult(new ActivityResultContracts.GetContent(),
-                    new ActivityResultCallback<Uri>() {
-                        @Override
-                        public void onActivityResult(Uri uri) {
-                            Toast.makeText(Quiz.this, "onActivityResult", Toast.LENGTH_SHORT).show();
-                            // Handle the returned Uri
-                        }
-                    });
+
 
 
 
@@ -398,6 +421,7 @@ public class Quiz extends AppCompatActivity {
 
                     case GameOver:
                     case EndOneQuestionWrong:
+                    case EndGameNoQuestions:
                         Intent intent = new Intent(buttonSubmit.getContext(), MainActivity.class);
                         startActivity(intent);
                         ApplicationData.WriteScoreDb(CurrentGameScore);

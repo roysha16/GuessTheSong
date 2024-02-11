@@ -7,7 +7,8 @@
     "A2": "A2",
     "A3": "A3",
     "A4": "A4",
-    "Song": "https://www.youtube.com/embed/qD4mkJiQPKY"
+    "Song": "https://www.youtube.com/watch?v=qD4mkJiQPKY",
+    "_comment":"לא נמצא לינק ללא הקפצת מסך"
 
   },
   {
@@ -18,7 +19,8 @@
     "A2": "A22",
     "A3": "A23",
     "A4": "A24",
-    "Song": "https://www.youtube.com/embed/XocnNMuZ_c0"
+    "Song": "https://www.youtube.com/watch?v=XocnNMuZ_c0",
+    "_comment":"לא נמצא לינק ללא הקפצת מסך"
   },
   {
     "id": 3,
@@ -28,7 +30,8 @@
     "A2": "A22",
     "A3": "A23",
     "A4": "A24",
-    "Song": "https://www.youtube.com/embed/ShwuARNjeIs"
+    "Song": "https://www.youtube.com/embed/ShwuARNjeIs",
+    "_comment":"link ok"
   },
   {
     "id": 4,
@@ -38,7 +41,8 @@
     "A2": "A22",
     "A3": "A23",
     "A4": "A24",
-    "Song": "https://www.youtube.com/embed/yzmdj7eqin8"
+    "Song": "https://www.youtube.com/embed/yzmdj7eqin8",
+    "_comment":"link ok"
   },
   {
     "id": 5,
@@ -48,6 +52,8 @@
     "A2": "A22",
     "A3": "A23",
     "A4": "A24",
-    "Song": "https://www.youtube.com/embed/8lJJlHKQgoE"
+    "Song": "https://www.youtube.com/embed/8lJJlHKQgoE",
+    "_comment":"link ok"
+
   }
 ]
