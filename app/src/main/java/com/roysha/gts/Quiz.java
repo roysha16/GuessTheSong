@@ -125,7 +125,7 @@ public class Quiz extends AppCompatActivity {
         switch(event) {
             case StartNewGame:
                 CurrentGameScore = 0;
-                CurrentGameIndex = 1;
+                CurrentGameIndex = 0;
                 size = ApplicationData.getQuestionsList().size();
                 for(int i=0;i<size;i++) {
                     LocalGameQuestionsList.add( ApplicationData.getQuestionsList().get(i));
@@ -179,10 +179,12 @@ public class Quiz extends AppCompatActivity {
                 rb2.setText(nextQuestion.A2);
                 rb3.setText(nextQuestion.A3);
                 rb4.setText(nextQuestion.A4);
+                CurrentGameIndex +=1;
 
                 tvQuestion.setText(nextQuestion.Question);
                 buttonSubmit.setText("Submit Answer");
                 tvGameStatus.setText("In Middle Of Game");
+                tvIndex.setText(String.valueOf(CurrentGameIndex));
 
                 //Toast.makeText(Quiz.this, "Start New Game", Toast.LENGTH_SHORT).show();
                 rc = GameStatus.WaitingForAnswer;
@@ -206,9 +208,8 @@ public class Quiz extends AppCompatActivity {
                     selectedButton.setBackgroundColor(getColor(R.color.green));
                     setRadioGroupStatus(false);
                     CurrentGameScore +=5;
-                    CurrentGameIndex +=1;
                     tvScore.setText(String.valueOf(CurrentGameScore));
-                    tvIndex.setText(String.valueOf(CurrentGameIndex));
+
                     CreatePopUpVideoMusic(view,nextQuestion.Question,nextQuestion.getQuestion(nextQuestion.CorrectAnswer), nextQuestion.Song);
                    // CreatePopUpVideoMusic(view,"https://www.youtube.com/embed/skVg5FlVKS0");
 
@@ -337,11 +338,13 @@ public class Quiz extends AppCompatActivity {
                     case EndOneQuestionWrong:
                         break;
                     case EndGameNoQuestions:
+                        ApplicationData.WriteScoreDb(CurrentGameScore);
+
                         Intent intent = new Intent(buttonSubmit.getContext(), MainActivity.class);
                         startActivity(intent);
-                        ApplicationData.WriteScoreDb(CurrentGameScore);
                         CurrentGameScore = 0;
-                        CurrentGameIndex = 1;
+                        CurrentGameIndex = 0;
+
                         finish();
                         break;
                 }
@@ -392,10 +395,6 @@ public class Quiz extends AppCompatActivity {
 
 
         currentGameStatus = gameFlow(this.getCurrentFocus(),GameStatus.None,GameEvent.StartNewGame);
-
-            // GetContent creates an ActivityResultLauncher<String> to let you pass
-// in the mime type you want to let the user select
-
 
 
 
@@ -449,11 +448,11 @@ public class Quiz extends AppCompatActivity {
                     case GameOver:
                     case EndOneQuestionWrong:
                     case EndGameNoQuestions:
+                        ApplicationData.WriteScoreDb(CurrentGameScore);
                         Intent intent = new Intent(buttonSubmit.getContext(), MainActivity.class);
                         startActivity(intent);
-                        ApplicationData.WriteScoreDb(CurrentGameScore);
                         CurrentGameScore = 0;
-                        CurrentGameIndex = 1;
+                        CurrentGameIndex = 0;
                         finish();
                         break;
                 }
