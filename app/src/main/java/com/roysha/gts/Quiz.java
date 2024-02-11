@@ -333,10 +333,15 @@ public class Quiz extends AppCompatActivity {
 
                     case None:
                     case WaitingForAnswer:
-                    case EndOneQuestionCorrect:
-                    case GameOver:
-                    case EndOneQuestionWrong:
+
                         break;
+
+                    case EndOneQuestionCorrect:
+                        currentGameStatus = gameFlow(view, GameStatus.WaitingForAnswer,GameEvent.GetNewQuestion);
+
+                        break;
+                    case GameOver:
+                    //case EndOneQuestionWrong:
                     case EndGameNoQuestions:
                         ApplicationData.WriteScoreDb(CurrentGameScore);
 
