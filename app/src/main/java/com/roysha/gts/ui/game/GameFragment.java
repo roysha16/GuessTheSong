@@ -9,39 +9,26 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+
 import com.roysha.gts.ApplicationData;
-import com.roysha.gts.Login;
-import com.roysha.gts.MainActivity;
-import com.roysha.gts.Question;
 import com.roysha.gts.R;
-import com.roysha.gts.Splash;
 import com.roysha.gts.databinding.FragmentGameBinding;
-import com.roysha.gts.ApplicationData;
+
 import com.roysha.gts.Quiz;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public class GameFragment extends Fragment {
 
     private FragmentGameBinding binding;
-    Button buttonStart;
-    EditText editText;
-    int scorei=67;
+    Button btnStart;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -52,6 +39,9 @@ public class GameFragment extends Fragment {
         View root = binding.getRoot();
 
         ListView simpleListView = binding.ScoreListView;
+
+        // build array of last score. for now we decided that we keep only one last score
+        // but if we like we can build from it a list
         ArrayList list=new ArrayList<>();
         for(int i=0;i<1;i++){
             HashMap<String,String> item = new HashMap<String,String>();
@@ -70,15 +60,12 @@ public class GameFragment extends Fragment {
                 new int[] {R.id.line_a, R.id.line_b, R.id.line_c});
 
         simpleListView.setAdapter(sa);
-        // final TextView textView = binding.textGame;
-       // gameViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
-        buttonStart = binding.StartNewGame;
+        btnStart = binding.StartNewGame;
 
-        buttonStart.setOnClickListener(new View.OnClickListener() {
+        btnStart.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-             //   scorei = Integer.valueOf(editText.getText().toString());
-             //   ApplicationData.WriteScoreDb(scorei);
-                Intent intent = new Intent(buttonStart.getContext(), Quiz.class);
+                // start new game, intent to quiz activity for the game
+                Intent intent = new Intent(btnStart.getContext(), Quiz.class);
                 startActivity(intent);
             }
         });

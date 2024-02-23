@@ -18,8 +18,8 @@ import java.util.HashMap;
 
 public class UpdateDBActivity extends AppCompatActivity {
     ArrayList<Question> QuestionsList = new ArrayList<>();
-    Button buttonUpdateDb;
-    Button buttonDone;
+    Button btnUpdateDb;
+    Button btnDone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,19 +84,19 @@ public class UpdateDBActivity extends AppCompatActivity {
             }
         });
 
-        Button buttonDone = findViewById(R.id.Done);
+        Button btnDone = findViewById(R.id.Done);
 
 
-        buttonDone.setOnClickListener(new View.OnClickListener() {
+        btnDone.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                    Intent intent = new Intent(buttonDone.getContext(), MainActivity.class);
+                    Intent intent = new Intent(btnDone.getContext(), MainActivity.class);
                     startActivity(intent);
             }
 
         });
 
-        Button buttonUpdateDb = findViewById(R.id.UpdateQ);
-        buttonUpdateDb.setOnClickListener(new View.OnClickListener() {
+        Button btnUpdateDb = findViewById(R.id.UpdateQ);
+        btnUpdateDb.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                ApplicationData.WriteQuestionDb(tId.getText().toString(),
                        tCA.getText().toString(), tId.getText().toString(),

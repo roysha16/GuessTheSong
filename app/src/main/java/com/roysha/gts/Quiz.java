@@ -6,13 +6,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.UserHandle;
-import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -22,27 +17,18 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.MediaController;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
-
-import androidx.constraintlayout.widget.ConstraintLayout;
-
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
 import java.util.ArrayList;
 import java.util.Random;
 
 public class Quiz extends AppCompatActivity {
 
-    Button buttonSubmit;
+    Button btnSubmit;
     RadioGroup AnswerGroup;
     RadioButton selectedButton;
 
@@ -120,8 +106,6 @@ public class Quiz extends AppCompatActivity {
 
         boolean DidUserFindCorrectAnswer = false;
 
-               // Level myVar = Level.MEDIUM;
-
         switch(event) {
             case StartNewGame:
                 CurrentGameScore = 0;
@@ -141,7 +125,7 @@ public class Quiz extends AppCompatActivity {
                 {
                     Toast.makeText(Quiz.this, "End Question List", Toast.LENGTH_SHORT).show();
                     CreatePopUpVideoMusic(view,"You are the Winner","No More Questions in DB", "https://www.youtube.com/embed/RNiflDIWtsk");
-                    buttonSubmit.setText("Start New Game");
+                    btnSubmit.setText("Start New Game");
                     tvGameStatus.setText("You are the Winner!!!!");
 
                     rc = GameStatus.EndGameNoQuestions;
@@ -182,7 +166,7 @@ public class Quiz extends AppCompatActivity {
                 CurrentGameIndex +=1;
 
                 tvQuestion.setText(nextQuestion.Question);
-                buttonSubmit.setText("Submit Answer");
+                btnSubmit.setText("Submit Answer");
                 tvGameStatus.setText("In Middle Of Game");
                 tvIndex.setText(String.valueOf(CurrentGameIndex));
 
@@ -213,7 +197,7 @@ public class Quiz extends AppCompatActivity {
                     CreatePopUpVideoMusic(view,nextQuestion.Question,nextQuestion.getQuestion(nextQuestion.CorrectAnswer), nextQuestion.Song);
                    // CreatePopUpVideoMusic(view,"https://www.youtube.com/embed/skVg5FlVKS0");
 
-                    buttonSubmit.setText("Get New Question");
+                    btnSubmit.setText("Get New Question");
                  //   mGetContent.launch("image/*");
 
                     rc = GameStatus.EndOneQuestionCorrect;
@@ -224,7 +208,7 @@ public class Quiz extends AppCompatActivity {
                     tvGameStatus.setBackgroundColor(getColor(R.color.red));
                     setRadioGroupStatus(false);
                     CreatePopUpVideoMusic(view,nextQuestion.Question,"try again, maybe next time ..", "https://www.youtube.com/embed/s5B188EFlvE?si=OfRp8og6Gl5Nd5eJ");
-                    buttonSubmit.setText("CloseGame");
+                    btnSubmit.setText("CloseGame");
                     rc = GameStatus.EndOneQuestionWrong;
                    // mGetContent.launch("video/*");
 
@@ -269,23 +253,6 @@ public class Quiz extends AppCompatActivity {
         webView.getSettings().setJavaScriptEnabled(true);
 
         webView.setWebChromeClient(new WebChromeClient());
-       // webView.setWebViewClient(new WebViewClient());
-      //0  webView.loadUrl(url);
-
-        /////-----
-/*
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.setWebChromeClient(new WebChromeClient() {
-
-        } );
-
-
-
-
-        // videoWeb.loadData( "<iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/eWEF1Zrmdow\" frameborder=\"0\" allowfullscreen></iframe>",  "text/html" , "utf-8" );
-        // String data = "<iframe width=\"100%\" height=\"100%\" src=\"https://www.youtube.com/embed/AdqxnVkQ6-U\" frameborder=\"0\" allowfullscreen ;allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\"></iframe>";
-        //  String url = "https://www.youtube.com/embed/AdqxnVkQ6-U/?autoplay=1";
-        //String url = "https://www.youtube.com/embed/M7lc1UVf-VE?autoplay=1";*/
         String data = "<iframe width=\"100%\" height=\"100%\" src=" + url +
                 " title=\"RoySha video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" allowfullscreen></iframe>";
 
@@ -297,10 +264,6 @@ public class Quiz extends AppCompatActivity {
             webView.loadUrl(url);
         }
 
-
-
-//////*/
-
         // create the popup window
         int width = LinearLayout.LayoutParams.WRAP_CONTENT;
         int height = LinearLayout.LayoutParams.WRAP_CONTENT;
@@ -310,9 +273,6 @@ public class Quiz extends AppCompatActivity {
         // show the popup window
         // which view you pass in doesn't matter, it is only used for the window tolken
         popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
-
-       // url = url + "/mute=0";
-     //0000   webView.loadUrl(url);
 
         // dismiss the popup window when touched
         popupView.setOnTouchListener(new View.OnTouchListener() {
@@ -345,7 +305,7 @@ public class Quiz extends AppCompatActivity {
                     case EndGameNoQuestions:
                         ApplicationData.WriteScoreDb(CurrentGameScore);
 
-                        Intent intent = new Intent(buttonSubmit.getContext(), MainActivity.class);
+                        Intent intent = new Intent(btnSubmit.getContext(), MainActivity.class);
                         startActivity(intent);
                         CurrentGameScore = 0;
                         CurrentGameIndex = 0;
@@ -375,18 +335,10 @@ public class Quiz extends AppCompatActivity {
                     // Handle the returned Uri
                 }
             });
-   /* ActivityResultLauncher<String> mGetContent = registerForActivityResult(new ActivityResultContracts.GetContent(),
-            new ActivityResultCallback<Uri>() {
-                @Override
-                public void onActivityResult(Uri uri) {
-                    Toast.makeText(Quiz.this, "onActivityResult", Toast.LENGTH_SHORT).show();
-                    // Handle the returned Uri
-                }
-            });*/
         protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
-        buttonSubmit = findViewById(R.id.submit);
+        btnSubmit = findViewById(R.id.submit);
         AnswerGroup = findViewById(R.id.simpleRadioButton);
         rb1 = findViewById(R.id.radioButton1);
         rb2 = findViewById(R.id.radioButton2);
@@ -396,8 +348,6 @@ public class Quiz extends AppCompatActivity {
         tvIndex = findViewById(R.id.Qnumber);
         tvQuestion = findViewById(R.id.question);
         tvGameStatus = findViewById(R.id.GameStatus);
-        //buttonSubmit.setText("Submit");
-
 
         currentGameStatus = gameFlow(this.getCurrentFocus(),GameStatus.None,GameEvent.StartNewGame);
 
@@ -432,7 +382,7 @@ public class Quiz extends AppCompatActivity {
 
 
 
-        buttonSubmit.setOnClickListener(new View.OnClickListener() {
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
 
 
             public void onClick(View view) {
@@ -454,7 +404,7 @@ public class Quiz extends AppCompatActivity {
                     case EndOneQuestionWrong:
                     case EndGameNoQuestions:
                         ApplicationData.WriteScoreDb(CurrentGameScore);
-                        Intent intent = new Intent(buttonSubmit.getContext(), MainActivity.class);
+                        Intent intent = new Intent(btnSubmit.getContext(), MainActivity.class);
                         startActivity(intent);
                         CurrentGameScore = 0;
                         CurrentGameIndex = 0;

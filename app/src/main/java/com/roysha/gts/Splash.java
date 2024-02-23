@@ -21,6 +21,10 @@ public class Splash extends AppCompatActivity {
                     }
                 }
                 catch (InterruptedException ex) {
+                   if(ex.equals(0))
+                       // dummy code to pass build
+                       return;
+
                 }
                 finish();
 

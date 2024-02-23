@@ -7,33 +7,24 @@ import androidx.annotation.NonNull;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.FirebaseUserMetadata;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import com.roysha.gts.Question;
+
 public class ApplicationData {
 
-    ///Roysha test
-    // Firebase Database.
-    private static final int MAX_SCORE_LIST = 10;
 
+    private static final int MAX_SCORE_LIST = 10; // define the max high score list
 
-
-    static ArrayList<Question> QuestionsList = new ArrayList<>();
-    static ArrayList<Score> Scores = new ArrayList<>();
-    static ArrayList<String> AdminList = new ArrayList<>();
-    static Score lastGameScore = new Score(0,"","","");
+    static ArrayList<Question> QuestionsList = new ArrayList<>(); // array of game questions
+    static ArrayList<Score> Scores = new ArrayList<>(); // high score list
+    static ArrayList<String> AdminList = new ArrayList<>(); // list of admin users
+    static Score lastGameScore = new Score(0,"","",""); // out last game score
 
     public ApplicationData() {
         for(int i=0;i<4;i++) {
@@ -84,12 +75,9 @@ public class ApplicationData {
     }
 
 
-
-
     static public void WriteScoreDb(int newScore) {
         FirebaseDatabase firebaseDatabase;
         // Reference for Firebase.
-        //DatabaseReference dbQReference;
         DatabaseReference dbScoreReference;
 
         FirebaseAuth mAuth;
@@ -115,11 +103,8 @@ public class ApplicationData {
         /// check if need to store score
         for(;indxOfMyScore<sizeCurrentTable;indxOfMyScore++)  {
             if(newScore > Scores.get(indxOfMyScore).score) {
-              //  Scores.add(i,nScore);
-              //  if (i+1 < 5)
-                //    dbScoreReference.child(String.valueOf(i+1)).setValue(Scores.get(i));
-                //dbScoreReference.child(String.valueOf(i)).setValue(nScore);
                 // my score is better then what we have in the table
+                // we stop the search and we know the index at @ indxOfMyScore
                 break;
             }
         }
