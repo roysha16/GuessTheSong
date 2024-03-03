@@ -24,7 +24,7 @@ public class ApplicationData {
     static ArrayList<Question> QuestionsList = new ArrayList<>(); // array of game questions
     static ArrayList<Score> Scores = new ArrayList<>(); // high score list
     static ArrayList<String> AdminList = new ArrayList<>(); // list of admin users
-    static Score lastGameScore = new Score(0,"","",""); // out last game score
+    static Score lastGameScore = new Score(-1,"","",""); // out last game score
 
     public ApplicationData() {
         for(int i=0;i<4;i++) {

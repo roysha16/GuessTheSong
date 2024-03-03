@@ -37,17 +37,18 @@ public class ScoreFragment extends Fragment {
         for(int i=0;i<ApplicationData.getScoreLen();i++){
             HashMap<String,String> item = new HashMap<String,String>();
             int sc = ApplicationData.getScore(i).score;
-            item.put("line1", String.valueOf(i+1) + ". " + String.valueOf(sc));
-            item.put( "line2", ApplicationData.getScore(i).email + " " + ApplicationData.getScore(i).date );
-            item.put( "line3", "");//ApplicationData.getScore(i).date);
+            item.put("line0", String.valueOf(i+1));
+            item.put("line1", "Score is " + String.valueOf(sc));
+            item.put( "line2", "User: " + ApplicationData.getScore(i).email);
+            item.put( "line3", "Time: "+ ApplicationData.getScore(i).date);
 
             list.add( item );
         }
 
         SimpleAdapter sa = new SimpleAdapter(getActivity(), list,
                 R.layout.activity_scorelistview,
-                new String[] { "line1","line2","line3"},
-                new int[] {R.id.line_a, R.id.line_b, R.id.line_c});
+                new String[] { "line0", "line1","line2","line3"},
+                new int[] {R.id.line_0,R.id.line_a, R.id.line_b, R.id.line_c});
 
         simpleListView.setAdapter(sa);
 

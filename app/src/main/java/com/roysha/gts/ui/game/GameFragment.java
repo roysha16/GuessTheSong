@@ -43,23 +43,36 @@ public class GameFragment extends Fragment {
         // build array of last score. for now we decided that we keep only one last score
         // but if we like we can build from it a list
         ArrayList list=new ArrayList<>();
+
         for(int i=0;i<1;i++){
             HashMap<String,String> item = new HashMap<String,String>();
             int sc = ApplicationData.getLastScore().score;
-            //  item.put("line1", String.valueOf(i+1) + ". " + String.valueOf(sc));
-             item.put("line1", String.valueOf(sc));
-            item.put( "line2", ApplicationData.getLastScore().email);
-            item.put( "line3", ApplicationData.getLastScore().date);
+
+            if(sc >=0) {//only if we start a game score will be >=0
+
+                item.put("line0", "");
+                item.put("line1", "Score is " + String.valueOf(sc));
+                item.put("line2", "User: " + ApplicationData.getLastScore().email);
+                item.put("line3", "Time: " + ApplicationData.getLastScore().date);
+            } else {
+                // no one played yet
+                item.put("line0", "");
+                item.put("line1", "Still didn't play");
+                item.put("line2", "Let's Play a game");
+                item.put("line3", "Good Luck!!!");
+            }
 
             list.add( item );
         }
 
+
         SimpleAdapter sa = new SimpleAdapter(getActivity(), list,
                 R.layout.activity_scorelistview,
-                new String[] { "line1","line2","line3"},
-                new int[] {R.id.line_a, R.id.line_b, R.id.line_c});
+                new String[]{"line0", "line1", "line2", "line3"},
+                new int[]{R.id.line_0, R.id.line_a, R.id.line_b, R.id.line_c});
 
         simpleListView.setAdapter(sa);
+
         btnStart = binding.StartNewGame;
 
         btnStart.setOnClickListener(new View.OnClickListener() {
