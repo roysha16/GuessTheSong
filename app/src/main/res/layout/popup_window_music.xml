@@ -12,7 +12,7 @@
 
     <TextView
         android:id="@+id/textViewQuestion"
-        android:layout_width="350dp"
+        android:layout_width="354dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
@@ -28,7 +28,7 @@
 
     <TextView
         android:id="@+id/textViewAnswer"
-        android:layout_width="350dp"
+        android:layout_width="354dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
@@ -40,34 +40,38 @@
         app:layout_constraintTop_toBottomOf="@+id/textViewQuestion" />
 
 
-    <WebView
-        android:id="@+id/simpleWebView"
-        android:layout_width="344dp"
+
+    <!-- Youtube Player view which
+    will play our youtube video -->
+    <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+        android:id="@+id/videoPlayer"
+        android:layout_width="348dp"
         android:layout_height="285dp"
         android:layout_marginTop="8dp"
         android:background="@color/purple_200"
 
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.421"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewAnswer" />
 
     <Button
         android:id="@+id/CloseBtn"
-        android:layout_width="350dp"
-        android:layout_height="wrap_content"
+        android:layout_width="278dp"
+        android:layout_height="50dp"
         android:layout_below="@id/choices_layout"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="20dp"
-
+        android:layout_marginTop="4dp"
         android:layout_marginRight="16dp"
+        android:layout_marginBottom="10dp"
+        android:backgroundTint="@color/purple_700"
         android:gravity="center"
         android:text="Close Window"
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/simpleWebView" />
+        app:layout_constraintTop_toBottomOf="@+id/videoPlayer" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

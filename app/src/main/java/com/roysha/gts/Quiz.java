@@ -3,7 +3,12 @@ package com.roysha.gts;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -44,6 +49,8 @@ public class Quiz extends AppCompatActivity {
     int CurrentGameIndex=0;
 
     boolean isGameIsOnGoing;
+
+    String videoId; // the ID of the yourtube video to play
 
     enum GameStatus {
         None,
@@ -124,7 +131,7 @@ public class Quiz extends AppCompatActivity {
                 if(size ==0)
                 {
                     Toast.makeText(Quiz.this, "End Question List", Toast.LENGTH_SHORT).show();
-                    CreatePopUpVideoMusic(view,"You are the Winner","No More Questions in DB", "https://www.youtube.com/embed/RNiflDIWtsk");
+                    CreatePopUpVideoMusic(view,"You are the Winner","No More Questions in DB", "RNiflDIWtsk"); //https://www.youtube.com/embed/RNiflDIWtsk
                     btnSubmit.setText("Start New Game");
                     tvGameStatus.setText("You are the Winner!!!!");
 
@@ -207,7 +214,7 @@ public class Quiz extends AppCompatActivity {
                     selectedButton.setBackgroundColor(getColor(R.color.red));
                     tvGameStatus.setBackgroundColor(getColor(R.color.red));
                     setRadioGroupStatus(false);
-                    CreatePopUpVideoMusic(view,nextQuestion.Question,"try again, maybe next time ..", "https://www.youtube.com/embed/s5B188EFlvE?si=OfRp8og6Gl5Nd5eJ");
+                    CreatePopUpVideoMusic(view,nextQuestion.Question,"try again, maybe next time ..", "s5B188EFlvE"); // fulr url https://www.youtube.com/embed/s5B188EFlvE?si=OfRp8og6Gl5Nd5eJ
                     btnSubmit.setText("CloseGame");
                     rc = GameStatus.EndOneQuestionWrong;
                    // mGetContent.launch("video/*");
@@ -247,8 +254,19 @@ public class Quiz extends AppCompatActivity {
          TextView TVAnswer = popupView.findViewById(R.id.textViewAnswer);
         TVAnswer.setText(answer);
 
+        YouTubePlayerView youTubePlayerView = popupView.findViewById(R.id.videoPlayer);
+        getLifecycle().addObserver(youTubePlayerView);
+        videoId = url;
 
-        WebView webView = popupView.findViewById(R.id.simpleWebView);
+        youTubePlayerView.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
+            @Override
+            public void onReady(@NonNull YouTubePlayer youTubePlayer) {
+
+                youTubePlayer.loadVideo(videoId, 0);
+            }
+        });
+
+      /*  WebView webView = popupView.findViewById(R.id.simpleWebView);
        WebSettings webSettings = webView.getSettings();
         webView.getSettings().setJavaScriptEnabled(true);
 
@@ -262,7 +280,7 @@ public class Quiz extends AppCompatActivity {
         else{
             webView.setWebViewClient(new WebViewClient());
             webView.loadUrl(url);
-        }
+        }*/
 
         // create the popup window
         int width = LinearLayout.LayoutParams.WRAP_CONTENT;
