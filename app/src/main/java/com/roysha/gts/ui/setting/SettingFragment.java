@@ -29,8 +29,8 @@ public class SettingFragment extends Fragment {
 
     private FragmentSettingBinding binding;
     FirebaseAuth mAuth;
-    Button buttonLogout;
-    Button buttonUpdateDb;
+    Button btnLogout;
+    Button btnUpdateDb;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -44,6 +44,7 @@ public class SettingFragment extends Fragment {
 
         final TextView textViewEmail = binding.Email;
 
+        // if connected to firebase user, copy the email to the ui
         if (currentUser != null) {
             textViewEmail.setText(currentUser.getEmail());
         } else
@@ -53,6 +54,8 @@ public class SettingFragment extends Fragment {
 
         final TextView textViewUserType = binding.UserType;
 
+        // check if the user is admin / regular.
+        // if it admin, we will let him to be able to update the DB from UI
         if (ApplicationData.isUserAdmin()) {
             textViewUserType.setText("User is Admin");
         } else
@@ -61,33 +64,34 @@ public class SettingFragment extends Fragment {
         }
 
 
-        buttonLogout = binding.Logout;
+        btnLogout = binding.Logout;
         View root = binding.getRoot();
 
-        buttonLogout.setOnClickListener(new View.OnClickListener() {
+        btnLogout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 mAuth = FirebaseAuth.getInstance();
+                // if user connected to firebase, then we will signout from firebase
                 FirebaseUser currentUser = mAuth.getCurrentUser();
                 if(currentUser != null){
                     mAuth.signOut();
                     JumpToSplash();
 
+
                 }
             }
         });
 
-        buttonUpdateDb = binding.UpdateDB;
-        buttonUpdateDb.setOnClickListener(new View.OnClickListener() {
+        btnUpdateDb = binding.UpdateDB;
+        btnUpdateDb.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 if (ApplicationData.isUserAdmin()) {
-                    Intent intent = new Intent(buttonUpdateDb.getContext(), UpdateDBActivity.class);
+                    // if user if from type admin, we will intent to update DB activity
+                    Intent intent = new Intent(btnUpdateDb.getContext(), UpdateDBActivity.class);
                     startActivity(intent);
                 }
             }
 
         });
-
-
 
         return root;
     }
@@ -99,8 +103,9 @@ public class SettingFragment extends Fragment {
     }
 
     public void JumpToSplash() {
+        // if we signing out, we want to start the application
         Intent intent = new Intent(super.getActivity(), Login.class);
         startActivity(intent);
-
+        super.getActivity().finish();
      }
 }

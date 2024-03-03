@@ -12,30 +12,23 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-
-import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import com.roysha.gts.Question;
+
 public class ApplicationData {
 
-    ///Roysha test
-    // Firebase Database.
-    private static final int MAX_SCORE_LIST = 10;
 
+    private static final int MAX_SCORE_LIST = 10; // define the max high score list
 
-
-    static ArrayList<Question> QuestionsList = new ArrayList<>();
-    static ArrayList<Score> Scores = new ArrayList<>();
-    static Score lastGameScore = new Score(0,"","","");
+    static ArrayList<Question> QuestionsList = new ArrayList<>(); // array of game questions
+    static ArrayList<Score> Scores = new ArrayList<>(); // high score list
+    static ArrayList<String> AdminList = new ArrayList<>(); // list of admin users
+    static Score lastGameScore = new Score(-1,"","",""); // out last game score
 
     public ApplicationData() {
         for(int i=0;i<4;i++) {
-            Question question = new Question(1, i, String.valueOf(i)+"a1", String.valueOf(i)+"a2", String.valueOf(i)+"a3", String.valueOf(i)+"a4", "error database"+String.valueOf(i));
+            Question question = new Question(1, i, String.valueOf(i)+"a1", String.valueOf(i)+"a2", String.valueOf(i)+"a3", String.valueOf(i)+"a4", "error database"+String.valueOf(i),"url.com");
             QuestionsList.add(question);
         }
     }
@@ -60,8 +53,11 @@ public class ApplicationData {
 
         if(currentUser != null)
         {
-            if(currentUser.getEmail().compareTo("q@q.com")==0)
-                rc = true;
+            for(int i=0;i<AdminList.size() && !rc;i++) {
+                if (currentUser.getEmail().compareTo(AdminList.get(i)) == 0)
+                    rc = true;
+            }
+
         }
         return rc;
     }
@@ -79,12 +75,9 @@ public class ApplicationData {
     }
 
 
-
-
     static public void WriteScoreDb(int newScore) {
         FirebaseDatabase firebaseDatabase;
         // Reference for Firebase.
-        //DatabaseReference dbQReference;
         DatabaseReference dbScoreReference;
 
         FirebaseAuth mAuth;
@@ -110,11 +103,8 @@ public class ApplicationData {
         /// check if need to store score
         for(;indxOfMyScore<sizeCurrentTable;indxOfMyScore++)  {
             if(newScore > Scores.get(indxOfMyScore).score) {
-              //  Scores.add(i,nScore);
-              //  if (i+1 < 5)
-                //    dbScoreReference.child(String.valueOf(i+1)).setValue(Scores.get(i));
-                //dbScoreReference.child(String.valueOf(i)).setValue(nScore);
                 // my score is better then what we have in the table
+                // we stop the search and we know the index at @ indxOfMyScore
                 break;
             }
         }
@@ -141,7 +131,7 @@ public class ApplicationData {
         firebaseDatabase = FirebaseDatabase.getInstance();
         dbQReference = firebaseDatabase.getReference("Questions");
 
-        Question nQuestion = new Question( Integer.valueOf(CorrectAnswer),Integer.valueOf(id), A1, A2, A3, A4, Quest);
+        Question nQuestion = new Question( Integer.valueOf(CorrectAnswer),Integer.valueOf(id), A1, A2, A3, A4, Quest,"url.com");
 
 
         dbQReference.child(indx).setValue(nQuestion);
@@ -152,10 +142,13 @@ public class ApplicationData {
         // Reference for Firebase.
         DatabaseReference dbQReference;
         DatabaseReference dbScoreReference;
+        DatabaseReference dbAdminReference;
+
 
         firebaseDatabase = FirebaseDatabase.getInstance();
         dbQReference = firebaseDatabase.getReference("Questions");
         dbScoreReference = firebaseDatabase.getReference("Scores");
+        dbAdminReference = firebaseDatabase.getReference("Admin");
 
 
         dbQReference.addChildEventListener(new ChildEventListener() {
@@ -220,6 +213,34 @@ public class ApplicationData {
             public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
                 Score score = dataSnapshot.getValue(Score.class);
                 String key = dataSnapshot.getKey();
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
+        dbAdminReference.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
+                String usr = dataSnapshot.getValue(String.class);
+                if(previousChildName == null)
+                    AdminList.clear();
+                //  QuestionsList.add(dataSnapshot.getKey(),question);
+                AdminList.add(usr);
+
+            }
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String previousChildName) {
+                String usr = dataSnapshot.getValue(String.class);
+                String key = dataSnapshot.getKey();
+                int iKey = Integer.valueOf(key);
+                AdminList.set(iKey,usr);
+            }
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String previousChildName) {
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {

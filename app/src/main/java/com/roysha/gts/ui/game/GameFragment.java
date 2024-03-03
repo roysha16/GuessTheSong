@@ -9,39 +9,26 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+
 import com.roysha.gts.ApplicationData;
-import com.roysha.gts.Login;
-import com.roysha.gts.MainActivity;
-import com.roysha.gts.Question;
 import com.roysha.gts.R;
-import com.roysha.gts.Splash;
 import com.roysha.gts.databinding.FragmentGameBinding;
-import com.roysha.gts.ApplicationData;
+
 import com.roysha.gts.Quiz;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public class GameFragment extends Fragment {
 
     private FragmentGameBinding binding;
-    Button buttonStart;
-    EditText editText;
-    int scorei=67;
+    Button btnStart;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -52,33 +39,46 @@ public class GameFragment extends Fragment {
         View root = binding.getRoot();
 
         ListView simpleListView = binding.ScoreListView;
+
+        // build array of last score. for now we decided that we keep only one last score
+        // but if we like we can build from it a list
         ArrayList list=new ArrayList<>();
+
         for(int i=0;i<1;i++){
             HashMap<String,String> item = new HashMap<String,String>();
             int sc = ApplicationData.getLastScore().score;
-            //  item.put("line1", String.valueOf(i+1) + ". " + String.valueOf(sc));
-             item.put("line1", String.valueOf(sc));
-            item.put( "line2", ApplicationData.getLastScore().email);
-            item.put( "line3", ApplicationData.getLastScore().date);
+
+            if(sc >=0) {//only if we start a game score will be >=0
+
+                item.put("line0", "");
+                item.put("line1", "Score is " + String.valueOf(sc));
+                item.put("line2", "User: " + ApplicationData.getLastScore().email);
+                item.put("line3", "Time: " + ApplicationData.getLastScore().date);
+            } else {
+                // no one played yet
+                item.put("line0", "");
+                item.put("line1", "Still didn't play");
+                item.put("line2", "Let's Play a game");
+                item.put("line3", "Good Luck!!!");
+            }
 
             list.add( item );
         }
 
+
         SimpleAdapter sa = new SimpleAdapter(getActivity(), list,
                 R.layout.activity_scorelistview,
-                new String[] { "line1","line2","line3"},
-                new int[] {R.id.line_a, R.id.line_b, R.id.line_c});
+                new String[]{"line0", "line1", "line2", "line3"},
+                new int[]{R.id.line_0, R.id.line_a, R.id.line_b, R.id.line_c});
 
         simpleListView.setAdapter(sa);
-        // final TextView textView = binding.textGame;
-       // gameViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
-        buttonStart = binding.StartNewGame;
 
-        buttonStart.setOnClickListener(new View.OnClickListener() {
+        btnStart = binding.StartNewGame;
+
+        btnStart.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-             //   scorei = Integer.valueOf(editText.getText().toString());
-             //   ApplicationData.WriteScoreDb(scorei);
-                Intent intent = new Intent(buttonStart.getContext(), Quiz.class);
+                // start new game, intent to quiz activity for the game
+                Intent intent = new Intent(btnStart.getContext(), Quiz.class);
                 startActivity(intent);
             }
         });

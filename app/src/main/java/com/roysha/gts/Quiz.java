@@ -1,34 +1,39 @@
 package com.roysha.gts;
 
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.UserHandle;
-import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.constraintlayout.widget.ConstraintLayout;
-
 import java.util.ArrayList;
 import java.util.Random;
 
 public class Quiz extends AppCompatActivity {
 
-    Button buttonSubmit;
+    Button btnSubmit;
     RadioGroup AnswerGroup;
     RadioButton selectedButton;
 
@@ -45,13 +50,17 @@ public class Quiz extends AppCompatActivity {
 
     boolean isGameIsOnGoing;
 
+    String videoId; // the ID of the yourtube video to play
+
     enum GameStatus {
         None,
         WaitingForAnswer,
 
 
-        EndOneQuestionCurrect,
+        EndOneQuestionCorrect,
         EndOneQuestionWrong,
+
+        EndGameNoQuestions,
 
         GameOver
 
@@ -61,7 +70,7 @@ public class Quiz extends AppCompatActivity {
         GetNewQuestion,
         SubmitedAnswer,
 
-        CurrectAnswer,
+        CorrectAnswer,
         WrongAnswer
     }
 
@@ -75,14 +84,14 @@ public class Quiz extends AppCompatActivity {
       State: GetNewQuestion
             1. GetRandom Question from local game Question Array.
             2. Remove Question from local game Question Array.
-            3. Make random answers for current question
+            3. Make random answers for corrent question
             4. update UI with questions, and button action = "Submit"
             --> Move to "WaitingForAnswer"
 
      State: WaitingForAnswer
             1. If not selected - do nothing
-            2. If selected == question.currectanswer
-                --> Move to "EndOneQuestionCurrect"
+            2. If selected == question.correctanswer
+                --> Move to "EndOneQuestionCorrect"
 
 
      */
@@ -91,7 +100,7 @@ public class Quiz extends AppCompatActivity {
 
     Question nextQuestion;
 
-    GameStatus gameFlow(GameStatus nextStep, GameEvent event) {
+    GameStatus gameFlow(View view,GameStatus nextStep, GameEvent event) {
         //return value indicate if we still in game or it's game over
         GameStatus rc = GameStatus.None;
         int radioButtonID = AnswerGroup.getCheckedRadioButtonId();
@@ -102,14 +111,12 @@ public class Quiz extends AppCompatActivity {
 
         int size;
 
-        boolean DidUserFindCurrectAnswer = false;
-
-               // Level myVar = Level.MEDIUM;
+        boolean DidUserFindCorrectAnswer = false;
 
         switch(event) {
             case StartNewGame:
                 CurrentGameScore = 0;
-                CurrentGameIndex = 1;
+                CurrentGameIndex = 0;
                 size = ApplicationData.getQuestionsList().size();
                 for(int i=0;i<size;i++) {
                     LocalGameQuestionsList.add( ApplicationData.getQuestionsList().get(i));
@@ -124,7 +131,11 @@ public class Quiz extends AppCompatActivity {
                 if(size ==0)
                 {
                     Toast.makeText(Quiz.this, "End Question List", Toast.LENGTH_SHORT).show();
-                    rc = GameStatus.EndOneQuestionWrong;
+                    CreatePopUpVideoMusic(view,"You are the Winner","No More Questions in DB", "RNiflDIWtsk"); //https://www.youtube.com/embed/RNiflDIWtsk
+                    btnSubmit.setText("Start New Game");
+                    tvGameStatus.setText("You are the Winner!!!!");
+
+                    rc = GameStatus.EndGameNoQuestions;
                     break;
 
                 }
@@ -137,7 +148,16 @@ public class Quiz extends AppCompatActivity {
                 for(int i=0;i<size;i++) {
                     LocalGameAnswerList.add( ApplicationData.getQuestionsList().get(i));
                 }
-                LocalGameAnswerList.remove(rand);
+                // we need to find the index of the next question in the global answer list
+                int questionId = ans[0].id;
+                for(int i=0;i<size;i++) {
+                    if(questionId == LocalGameAnswerList.get(i).id) {
+                        /// found the correct question and remove it from answerList
+                        LocalGameAnswerList.remove(i);
+                        break;
+                    }
+
+                }
 
                 for(int i=0;i<3;i++){
                     rand = random.nextInt(LocalGameAnswerList.size());
@@ -150,10 +170,12 @@ public class Quiz extends AppCompatActivity {
                 rb2.setText(nextQuestion.A2);
                 rb3.setText(nextQuestion.A3);
                 rb4.setText(nextQuestion.A4);
+                CurrentGameIndex +=1;
 
                 tvQuestion.setText(nextQuestion.Question);
-                buttonSubmit.setText("Submit Answer");
+                btnSubmit.setText("Submit Answer");
                 tvGameStatus.setText("In Middle Of Game");
+                tvIndex.setText(String.valueOf(CurrentGameIndex));
 
                 //Toast.makeText(Quiz.this, "Start New Game", Toast.LENGTH_SHORT).show();
                 rc = GameStatus.WaitingForAnswer;
@@ -171,22 +193,32 @@ public class Quiz extends AppCompatActivity {
                 }
                 if(position == (nextQuestion.CorrectAnswer-1))
                 {
-                    tvGameStatus.setText("Currect Answer");
+                    tvGameStatus.setText("Correct Answer");
                     tvGameStatus.setBackgroundColor(getColor(R.color.green));
-                    Toast.makeText(Quiz.this, "Currect Answer", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Quiz.this, "Correct Answer", Toast.LENGTH_SHORT).show();
                     selectedButton.setBackgroundColor(getColor(R.color.green));
                     setRadioGroupStatus(false);
-                    buttonSubmit.setText("Get New Question");
+                    CurrentGameScore +=5;
+                    tvScore.setText(String.valueOf(CurrentGameScore));
 
-                    rc = GameStatus.EndOneQuestionCurrect;
+                    CreatePopUpVideoMusic(view,nextQuestion.Question,nextQuestion.getQuestion(nextQuestion.CorrectAnswer), nextQuestion.Song);
+                   // CreatePopUpVideoMusic(view,"https://www.youtube.com/embed/skVg5FlVKS0");
+
+                    btnSubmit.setText("Get New Question");
+                 //   mGetContent.launch("image/*");
+
+                    rc = GameStatus.EndOneQuestionCorrect;
                 } else {
                     tvGameStatus.setText("Wrong Answer");
                     Toast.makeText(Quiz.this, "Wrong Answer", Toast.LENGTH_SHORT).show();
                     selectedButton.setBackgroundColor(getColor(R.color.red));
                     tvGameStatus.setBackgroundColor(getColor(R.color.red));
                     setRadioGroupStatus(false);
-                    buttonSubmit.setText("CloseGame");
+                    CreatePopUpVideoMusic(view,nextQuestion.Question,"try again, maybe next time ..", "s5B188EFlvE"); // fulr url https://www.youtube.com/embed/s5B188EFlvE?si=OfRp8og6Gl5Nd5eJ
+                    btnSubmit.setText("CloseGame");
                     rc = GameStatus.EndOneQuestionWrong;
+                   // mGetContent.launch("video/*");
+
                 }
 
 
@@ -202,10 +234,129 @@ public class Quiz extends AppCompatActivity {
             ((RadioButton)AnswerGroup.getChildAt(i)).setEnabled(isEnabled);
         }
     }
+
+    void CreatePopUpVideoMusic(View view, String question, String answer, String url) {
+        // New Activiy in full view
+        //   startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(uriString)));
+        //   Toast.makeText(Quiz.this, "Playing Video", Toast.LENGTH_SHORT).show();
+
+        //   Toast.makeText(Quiz.this, "Playing Video", Toast.LENGTH_SHORT).show();
+
+
+        // inflate the layout of the popup window
+        LayoutInflater inflater = (LayoutInflater)
+                getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView = inflater.inflate(R.layout.popup_window_music, null);
+
+         TextView TVQuestion = popupView.findViewById(R.id.textViewQuestion);
+        TVQuestion.setText(question);
+
+         TextView TVAnswer = popupView.findViewById(R.id.textViewAnswer);
+        TVAnswer.setText(answer);
+
+        YouTubePlayerView youTubePlayerView = popupView.findViewById(R.id.videoPlayer);
+        getLifecycle().addObserver(youTubePlayerView);
+        videoId = url;
+
+        youTubePlayerView.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
+            @Override
+            public void onReady(@NonNull YouTubePlayer youTubePlayer) {
+
+                youTubePlayer.loadVideo(videoId, 0);
+            }
+        });
+
+      /*  WebView webView = popupView.findViewById(R.id.simpleWebView);
+       WebSettings webSettings = webView.getSettings();
+        webView.getSettings().setJavaScriptEnabled(true);
+
+        webView.setWebChromeClient(new WebChromeClient());
+        String data = "<iframe width=\"100%\" height=\"100%\" src=" + url +
+                " title=\"RoySha video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" allowfullscreen></iframe>";
+
+        if (url.contains("embed")) {
+            webView.loadData(data, "text/html", "utf-8");
+        }
+        else{
+            webView.setWebViewClient(new WebViewClient());
+            webView.loadUrl(url);
+        }*/
+
+        // create the popup window
+        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        boolean focusable = true; // lets taps outside the popup also dismiss it
+        final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+
+        // show the popup window
+        // which view you pass in doesn't matter, it is only used for the window tolken
+        popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+
+        // dismiss the popup window when touched
+        popupView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+               // simpleVideoView.stopPlayback();
+                popupWindow.dismiss();
+                return true;
+            }
+        });
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+
+            @Override
+            public void onDismiss() {
+                // TODO Auto-generated method stub
+                switch (currentGameStatus) {
+
+
+                    case None:
+                    case WaitingForAnswer:
+
+                        break;
+
+                    case EndOneQuestionCorrect:
+                        currentGameStatus = gameFlow(view, GameStatus.WaitingForAnswer,GameEvent.GetNewQuestion);
+
+                        break;
+                    case GameOver:
+                    //case EndOneQuestionWrong:
+                    case EndGameNoQuestions:
+                        ApplicationData.WriteScoreDb(CurrentGameScore);
+
+                        Intent intent = new Intent(btnSubmit.getContext(), MainActivity.class);
+                        startActivity(intent);
+                        CurrentGameScore = 0;
+                        CurrentGameIndex = 0;
+
+                        finish();
+                        break;
+                }
+
+            }
+        });
+        Button closeButton = popupView.findViewById(R.id.CloseBtn);
+
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                popupWindow.dismiss();
+
+            }
+        });
+
+
+    }
+
+    ActivityResultLauncher<String> mGetContent = registerForActivityResult(new ActivityResultContracts.GetContent(),
+            new ActivityResultCallback<Uri>() {
+                @Override
+                public void onActivityResult(Uri uri) {
+                    // Handle the returned Uri
+                }
+            });
         protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
-        buttonSubmit = findViewById(R.id.submit);
+        btnSubmit = findViewById(R.id.submit);
         AnswerGroup = findViewById(R.id.simpleRadioButton);
         rb1 = findViewById(R.id.radioButton1);
         rb2 = findViewById(R.id.radioButton2);
@@ -215,9 +366,8 @@ public class Quiz extends AppCompatActivity {
         tvIndex = findViewById(R.id.Qnumber);
         tvQuestion = findViewById(R.id.question);
         tvGameStatus = findViewById(R.id.GameStatus);
-        //buttonSubmit.setText("Submit");
 
-        currentGameStatus = gameFlow(GameStatus.None,GameEvent.StartNewGame);
+        currentGameStatus = gameFlow(this.getCurrentFocus(),GameStatus.None,GameEvent.StartNewGame);
 
 
 
@@ -250,7 +400,7 @@ public class Quiz extends AppCompatActivity {
 
 
 
-        buttonSubmit.setOnClickListener(new View.OnClickListener() {
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
 
 
             public void onClick(View view) {
@@ -261,112 +411,29 @@ public class Quiz extends AppCompatActivity {
                     case None:
                     case WaitingForAnswer:
 
-                        currentGameStatus = gameFlow(GameStatus.WaitingForAnswer,GameEvent.SubmitedAnswer);
+                        currentGameStatus = gameFlow(view, GameStatus.WaitingForAnswer,GameEvent.SubmitedAnswer);
                         break;
-                   case EndOneQuestionCurrect:
-                       currentGameStatus = gameFlow(GameStatus.WaitingForAnswer,GameEvent.GetNewQuestion);
-                       CurrentGameScore +=5;
-                       CurrentGameIndex +=1;
-                       tvScore.setText(String.valueOf(CurrentGameScore));
-                       tvIndex.setText(String.valueOf(CurrentGameIndex));
+                   case EndOneQuestionCorrect:
+                       currentGameStatus = gameFlow(view, GameStatus.WaitingForAnswer,GameEvent.GetNewQuestion);
 
                        break;
 
                     case GameOver:
                     case EndOneQuestionWrong:
-                        Intent intent = new Intent(buttonSubmit.getContext(), MainActivity.class);
-                        startActivity(intent);
+                    case EndGameNoQuestions:
                         ApplicationData.WriteScoreDb(CurrentGameScore);
+                        Intent intent = new Intent(btnSubmit.getContext(), MainActivity.class);
+                        startActivity(intent);
                         CurrentGameScore = 0;
-                        CurrentGameIndex = 1;
+                        CurrentGameIndex = 0;
                         finish();
                         break;
                 }
 
-               // if (isGameIsOnGoing == false) {
-
-                    /*  Intent intent = new Intent(buttonSubmit.getContext(), MainActivity.class);
-                    startActivity(intent);
-                    ApplicationData.WriteScoreDb(CurrentGameScore);
-                    CurrentGameScore = 0;
-*/
-             //   }
 
             }
         });
     }
 }
 
-// Old POP up code
-/*
-                // inflate the layout of the popup window
-                LayoutInflater inflater = (LayoutInflater)
-                        getSystemService(LAYOUT_INFLATER_SERVICE);
-                View popupView = inflater.inflate(R.layout.popup_window, null);
 
-                TextView TVQuestion = popupView.findViewById(R.id.textViewQuestion);
-
-                TextView TVAnswer = popupView.findViewById(R.id.textViewAnswer);
-                TextView TVScore = popupView.findViewById(R.id.textViewScore);
-
-                TVQuestion.setText(gameQuestion);
-                TVAnswer.setText(gameAnswer);
-                TVScore.setText(String.valueOf(CurrentGameScore));
-                ConstraintLayout cl = (ConstraintLayout)popupView.findViewById(R.id.popup_window);
-
-                if(DidUserFindCurrectAnswer) {
-                    cl.setBackgroundColor(0xFF000000);
-
-
-                }
-               if(DidUserFindCurrectAnswer) {
-
-                   cl.setBackgroundColor(getColor(R.color.green));//null));
-                    //cl.setBackgroundColor(0xff10b566);
-                //    popupView.setBackgroundColor(0xff10b566);
-
-
-                }
-                else {
-                   // cl.setBackgroundColor(0xffe72a16);
-                   cl.setBackgroundColor(getColor(R.color.red));//,null));
-
-                 //   popupView.setBackgroundColor(R.color.red);
-
-                }
-
-
-                // create the popup window
-                int width = LinearLayout.LayoutParams.WRAP_CONTENT;
-                int height = LinearLayout.LayoutParams.WRAP_CONTENT;
-                boolean focusable = true; // lets taps outside the popup also dismiss it
-
-                final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
-
-
-
-
-                // show the popup window
-                // which view you pass in doesn't matter, it is only used for the window tolken
-                popupWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
-
-                // dismiss the popup window when touched
-                popupView.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        popupWindow.dismiss();
-                        buttonSubmit.setText("Submit");
-                        if(isGameIsOnGoing == false) {
-                            Intent intent = new Intent(popupView.getContext(), MainActivity.class);
-                            startActivity(intent);
-                            ApplicationData.WriteScoreDb(CurrentGameScore);
-                            finish();
-
-                        }
-                        return true;
-                    }
-                });
-
-                return  rc;
-
-            }*/

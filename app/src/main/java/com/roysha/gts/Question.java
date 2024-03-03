@@ -1,7 +1,4 @@
 package com.roysha.gts;
-
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 public class Question {
 
@@ -13,23 +10,25 @@ public class Question {
     public String A3;
     public String A4;
     public String Question;
+    public String Song;
 
     public Question(){
 
     }
     // Constractor to build random answer
-    public  Question(Question currectAns,Question ans2,Question ans3, Question ans4)
+    public  Question(Question correctAns,Question ans2,Question ans3, Question ans4)
     {
         String tmpString;
         Random random = new Random();
         int rand = random.nextInt(4)+1;
-        this.A1 = "*" + currectAns.A1;
+        this.A1 = "*" + correctAns.A1;
         this.A2 = ans2.A1;
         this.A3 = ans3.A1;
         this.A4 = ans4.A1;
-        this.Question= currectAns.Question;
-        this.id = currectAns.id;
+        this.Question= correctAns.Question;
+        this.id = correctAns.id;
         this.CorrectAnswer = rand;
+        this.Song = correctAns.Song;
 
         // put the right answer in random place
 
@@ -58,7 +57,7 @@ public class Question {
         }
 
     }
-    public Question(int CorrectAnswer,int id, String A1, String A2, String A3, String A4, String Question){
+    public Question(int CorrectAnswer,int id, String A1, String A2, String A3, String A4, String Question,String Song){
         this.A1 = A1;
         this.A2 = A2;
         this.A3 = A3;
@@ -66,6 +65,7 @@ public class Question {
         this.Question= Question;
         this.id = id;
         this.CorrectAnswer = CorrectAnswer;
+        this.Song = Song;
     }
     public String getQuestion(int Id){
         String ReturnQ = "";
@@ -86,6 +86,10 @@ public class Question {
                 break;
         }
         return ReturnQ;
+    }
+    public String SongGetter()
+    {
+        return this.Song;
     }
 
     int getCorrectAnswer(){

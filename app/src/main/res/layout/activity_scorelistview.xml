@@ -1,36 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/line_a"
-        android:layout_width="match_parent"
+        android:id="@+id/line_0"
+        android:layout_width="30dp"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/border"
+        android:text="16"
+        android:textAlignment="center"
         android:textColor="@color/purple_200"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/line_a"
+        android:layout_width="340dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="2dp"
+        android:text="Score is 44"
+        android:textColor="@color/purple_200"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/line_b"
-        android:layout_width="match_parent"
+        android:layout_width="340dp"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:layout_marginTop="1dp"
+        android:layout_marginStart="60dp"
+        android:text="user is a@a.com"
         android:textColor="@color/purple_200"
-        android:textSize="14sp" />
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@+id/line_a"
+        app:layout_constraintStart_toStartOf="parent"/>
     <TextView
         android:id="@+id/line_c"
-        android:layout_width="match_parent"
+        android:layout_width="340dp"
         android:layout_height="wrap_content"
-        android:text="TextView"
+        android:layout_marginStart="60dp"
+        android:layout_marginTop="1dp"
+        android:text="time is 00:223:2323:"
         android:textColor="@color/purple_200"
-        android:textSize="1sp" />
+        android:textSize="10sp"
+        app:layout_constraintTop_toBottomOf="@+id/line_b"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
-
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
 

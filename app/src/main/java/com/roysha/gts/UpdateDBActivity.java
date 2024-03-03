@@ -18,8 +18,8 @@ import java.util.HashMap;
 
 public class UpdateDBActivity extends AppCompatActivity {
     ArrayList<Question> QuestionsList = new ArrayList<>();
-    Button buttonUpdateDb;
-    Button buttonDone;
+    Button btnUpdateDb;
+    Button btnDone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,14 +42,16 @@ public class UpdateDBActivity extends AppCompatActivity {
             item.put("line5", "A3:" + question.A3);
             item.put("line6", "A4:" + question.A4);
             item.put("line7", "CA:" + String.valueOf(question.CorrectAnswer));
+            item.put("line8", "CA:" + String.valueOf(question.Song));
+
 
             list.add( item );
         }
 
         SimpleAdapter sa = new SimpleAdapter(getBaseContext(), list,
                 R.layout.activity_questionlistview,
-                new String[] { "line1","line2","line3","line4","line5","line6","line7"},
-                new int[] {R.id.line_1, R.id.line_2, R.id.line_3 ,R.id.line_4 ,R.id.line_5 ,R.id.line_6 ,R.id.line_7});
+                new String[] { "line1","line2","line3","line4","line5","line6","line7","line8"},
+                new int[] {R.id.line_1, R.id.line_2, R.id.line_3 ,R.id.line_4 ,R.id.line_5 ,R.id.line_6 ,R.id.line_7,R.id.line_8});
 
         simpleListView.setAdapter(sa);
 
@@ -61,6 +63,7 @@ public class UpdateDBActivity extends AppCompatActivity {
         TextInputEditText tA3 = findViewById(R.id.A3);
         TextInputEditText tA4 = findViewById(R.id.A4);
         TextInputEditText tCA = findViewById(R.id.CA);
+        TextInputEditText tSong = findViewById(R.id.Song);
 
         simpleListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -74,25 +77,26 @@ public class UpdateDBActivity extends AppCompatActivity {
                 tA3.setText(question.A3);
                 tA4.setText(question.A4);
                 tCA.setText(String.valueOf(question.CorrectAnswer));
+                tSong.setText(question.Song);
 
                 Toast.makeText(UpdateDBActivity.this, QuestionsList.get(position).id+"", Toast.LENGTH_SHORT).show();
 
             }
         });
 
-        Button buttonDone = findViewById(R.id.Done);
+        Button btnDone = findViewById(R.id.Done);
 
 
-        buttonDone.setOnClickListener(new View.OnClickListener() {
+        btnDone.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
-                    Intent intent = new Intent(buttonDone.getContext(), MainActivity.class);
+                    Intent intent = new Intent(btnDone.getContext(), MainActivity.class);
                     startActivity(intent);
             }
 
         });
 
-        Button buttonUpdateDb = findViewById(R.id.UpdateQ);
-        buttonUpdateDb.setOnClickListener(new View.OnClickListener() {
+        Button btnUpdateDb = findViewById(R.id.UpdateQ);
+        btnUpdateDb.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                ApplicationData.WriteQuestionDb(tId.getText().toString(),
                        tCA.getText().toString(), tId.getText().toString(),

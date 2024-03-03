@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,22 +15,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthException;
-import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import java.util.HashMap;
-import java.util.Map;
 
 
 public class Login extends AppCompatActivity {
     EditText editTextEmail, editTextPassword;
-    Button buttonReg;
-    Button buttonLogin;
+    Button btnReg;
+    Button btnLogin;
     FirebaseAuth mAuth;
 
     public void LoginSuccess() {
@@ -45,15 +35,15 @@ public class Login extends AppCompatActivity {
             finish();
         }
     }
-    ////end RoySha
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         editTextEmail = findViewById(R.id.editEmail);
         editTextPassword = findViewById(R.id.editPassword);
-        buttonReg = findViewById(R.id.Register);
-        buttonLogin = findViewById(R.id.Login);
+        btnReg = findViewById(R.id.Register);
+        btnLogin = findViewById(R.id.Login);
         mAuth = FirebaseAuth.getInstance();
 
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -62,7 +52,7 @@ public class Login extends AppCompatActivity {
             return;
         }
 
-        buttonReg.setOnClickListener(new View.OnClickListener() {
+        btnReg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String email, password;
@@ -100,7 +90,7 @@ public class Login extends AppCompatActivity {
                 });
             }
         });
-        buttonLogin.setOnClickListener(new View.OnClickListener() {
+        btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String email, password;

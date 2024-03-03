@@ -39,7 +39,7 @@
     <ListView
         android:id="@+id/ScoreListView"
         android:layout_width="331dp"
-        android:layout_height="47dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:divider="@color/material_blue_grey_800"
         android:dividerHeight="1dp"

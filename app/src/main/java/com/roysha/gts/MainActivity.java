@@ -10,21 +10,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-//import com.example.button.databinding.ActivityMainBinding;
-import android.os.Bundle;
-
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-
-
 import com.roysha.gts.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
@@ -51,18 +37,11 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
 
-   //     ..  toolbar = (Toolbar) navController;
-   //     setSupportActionBar(toolbar);
-
-
         androidx.appcompat.app.ActionBar bar2 = this.getSupportActionBar();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
         applicationData.InitDB();
-
-        //applicationData.WriteScoreDb(3);
-        //applicationData.WriteScoreDb(11);
 
     }
 
