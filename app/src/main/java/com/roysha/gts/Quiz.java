@@ -11,8 +11,11 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.Abs
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -32,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 public class Quiz extends AppCompatActivity {
+    private static final int HOW_LONG_TO_WAIT_ANSWER_IN_SEC = 30;
 
     Button btnSubmit;
     RadioGroup AnswerGroup;
@@ -45,8 +49,10 @@ public class Quiz extends AppCompatActivity {
     TextView tvIndex;
     TextView tvQuestion;
     TextView tvGameStatus;
-    int CurrentGameScore=0;
-    int CurrentGameIndex=0;
+    TextView tvSecToAnswer;
+    CountDownTimer countDownTimer;
+    int CurrentGameScore = 0;
+    int CurrentGameIndex = 0;
 
     boolean isGameIsOnGoing;
 
@@ -65,10 +71,13 @@ public class Quiz extends AppCompatActivity {
         GameOver
 
     }
+
     enum GameEvent {
         StartNewGame,
         GetNewQuestion,
         SubmitedAnswer,
+
+        TimeOver,
 
         CorrectAnswer,
         WrongAnswer
@@ -96,9 +105,43 @@ public class Quiz extends AppCompatActivity {
 
      */
     GameStatus currentGameStatus;
-    ArrayList<Question> LocalGameQuestionsList =  new ArrayList<>();
+    ArrayList<Question> LocalGameQuestionsList = new ArrayList<>();
 
     Question nextQuestion;
+
+    void HandleCountDownTimer(boolean isStart) {
+        if (isStart) {
+            countDownTimer = new CountDownTimer(HOW_LONG_TO_WAIT_ANSWER_IN_SEC * 1000, 1000) {
+                public void onTick(long millisUntilFinished) {
+                    long seconds = millisUntilFinished / 1000;
+                    tvSecToAnswer.setText(String.valueOf(seconds));
+                    boolean shouldWeBeep = false;
+                    if (seconds < 3) {
+                        shouldWeBeep = true;
+                    } else if ((seconds < 10) && (seconds % 2 == 0)) {
+                        shouldWeBeep = true;
+                    } else if (seconds % 5 == 0) {
+                        shouldWeBeep = true;
+                    }
+
+                    if (shouldWeBeep) {
+                        ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+                        toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 50);
+                    }
+                }
+
+                public void onFinish() {
+                    tvSecToAnswer.setText("Time is Over!!");
+                    currentGameStatus = gameFlow((View) btnSubmit.getParent(), GameStatus.WaitingForAnswer, GameEvent.TimeOver);
+                    ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+                    toneG.startTone(ToneGenerator.TONE_SUP_ERROR, 1000);
+                }
+            }.start();
+        } else {
+            countDownTimer.cancel();
+        }
+    }
+
 
     GameStatus gameFlow(View view,GameStatus nextStep, GameEvent event) {
         //return value indicate if we still in game or it's game over
@@ -177,6 +220,9 @@ public class Quiz extends AppCompatActivity {
                 tvGameStatus.setText("In Middle Of Game");
                 tvIndex.setText(String.valueOf(CurrentGameIndex));
 
+                HandleCountDownTimer(true);
+
+
                 //Toast.makeText(Quiz.this, "Start New Game", Toast.LENGTH_SHORT).show();
                 rc = GameStatus.WaitingForAnswer;
 
@@ -191,6 +237,10 @@ public class Quiz extends AppCompatActivity {
 
                     break;
                 }
+                // stop timer
+                HandleCountDownTimer(false);
+
+                //tvSecToAnswer.setText("");
                 if(position == (nextQuestion.CorrectAnswer-1))
                 {
                     tvGameStatus.setText("Correct Answer");
@@ -202,10 +252,7 @@ public class Quiz extends AppCompatActivity {
                     tvScore.setText(String.valueOf(CurrentGameScore));
 
                     CreatePopUpVideoMusic(view,nextQuestion.Question,nextQuestion.getQuestion(nextQuestion.CorrectAnswer), nextQuestion.Song);
-                   // CreatePopUpVideoMusic(view,"https://www.youtube.com/embed/skVg5FlVKS0");
-
                     btnSubmit.setText("Get New Question");
-                 //   mGetContent.launch("image/*");
 
                     rc = GameStatus.EndOneQuestionCorrect;
                 } else {
@@ -217,9 +264,21 @@ public class Quiz extends AppCompatActivity {
                     CreatePopUpVideoMusic(view,nextQuestion.Question,"try again, maybe next time ..", "s5B188EFlvE"); // fulr url https://www.youtube.com/embed/s5B188EFlvE?si=OfRp8og6Gl5Nd5eJ
                     btnSubmit.setText("CloseGame");
                     rc = GameStatus.EndOneQuestionWrong;
-                   // mGetContent.launch("video/*");
 
                 }
+                break;
+            case TimeOver:
+
+                    tvGameStatus.setText("Wrong Answer - Time is Over");
+                    Toast.makeText(Quiz.this, "Time Over", Toast.LENGTH_SHORT).show();
+                //selectedButton.setBackgroundColor(getColor(R.color.red));
+                    tvGameStatus.setBackgroundColor(getColor(R.color.red));
+                    setRadioGroupStatus(false);
+                    CreatePopUpVideoMusic(view,nextQuestion.Question,"try again, maybe next time ..", "s5B188EFlvE"); // fulr url https://www.youtube.com/embed/s5B188EFlvE?si=OfRp8og6Gl5Nd5eJ
+                    btnSubmit.setText("CloseGame");
+                    rc = GameStatus.EndOneQuestionWrong;
+
+                break;
 
 
         }
@@ -236,13 +295,6 @@ public class Quiz extends AppCompatActivity {
     }
 
     void CreatePopUpVideoMusic(View view, String question, String answer, String url) {
-        // New Activiy in full view
-        //   startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(uriString)));
-        //   Toast.makeText(Quiz.this, "Playing Video", Toast.LENGTH_SHORT).show();
-
-        //   Toast.makeText(Quiz.this, "Playing Video", Toast.LENGTH_SHORT).show();
-
-
         // inflate the layout of the popup window
         LayoutInflater inflater = (LayoutInflater)
                 getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -265,22 +317,6 @@ public class Quiz extends AppCompatActivity {
                 youTubePlayer.loadVideo(videoId, 0);
             }
         });
-
-      /*  WebView webView = popupView.findViewById(R.id.simpleWebView);
-       WebSettings webSettings = webView.getSettings();
-        webView.getSettings().setJavaScriptEnabled(true);
-
-        webView.setWebChromeClient(new WebChromeClient());
-        String data = "<iframe width=\"100%\" height=\"100%\" src=" + url +
-                " title=\"RoySha video player\" frameborder=\"0\" allow=\"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share\" allowfullscreen></iframe>";
-
-        if (url.contains("embed")) {
-            webView.loadData(data, "text/html", "utf-8");
-        }
-        else{
-            webView.setWebViewClient(new WebViewClient());
-            webView.loadUrl(url);
-        }*/
 
         // create the popup window
         int width = LinearLayout.LayoutParams.WRAP_CONTENT;
@@ -366,6 +402,7 @@ public class Quiz extends AppCompatActivity {
         tvIndex = findViewById(R.id.Qnumber);
         tvQuestion = findViewById(R.id.question);
         tvGameStatus = findViewById(R.id.GameStatus);
+        tvSecToAnswer = findViewById(R.id.SecToAnswerTxt);
 
         currentGameStatus = gameFlow(this.getCurrentFocus(),GameStatus.None,GameEvent.StartNewGame);
 
