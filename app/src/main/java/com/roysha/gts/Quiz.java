@@ -11,6 +11,7 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.Abs
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.net.Uri;
@@ -27,6 +28,7 @@ import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -51,6 +53,7 @@ public class Quiz extends AppCompatActivity {
     TextView tvGameStatus;
     TextView tvSecToAnswer;
     CountDownTimer countDownTimer;
+    ProgressBar pbTimer;
     int CurrentGameScore = 0;
     int CurrentGameIndex = 0;
 
@@ -115,9 +118,12 @@ public class Quiz extends AppCompatActivity {
                 public void onTick(long millisUntilFinished) {
                     long seconds = millisUntilFinished / 1000;
                     tvSecToAnswer.setText(String.valueOf(seconds));
+                    pbTimer.setProgress((int)seconds,true);
+
                     boolean shouldWeBeep = false;
                     if (seconds < 3) {
                         shouldWeBeep = true;
+                        pbTimer.setOutlineAmbientShadowColor(R.color.red);
                     } else if ((seconds < 10) && (seconds % 2 == 0)) {
                         shouldWeBeep = true;
                     } else if (seconds % 5 == 0) {
@@ -125,7 +131,7 @@ public class Quiz extends AppCompatActivity {
                     }
 
                     if (shouldWeBeep) {
-                        ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+                        ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
                         toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 50);
                     }
                 }
@@ -133,7 +139,7 @@ public class Quiz extends AppCompatActivity {
                 public void onFinish() {
                     tvSecToAnswer.setText("Time is Over!!");
                     currentGameStatus = gameFlow((View) btnSubmit.getParent(), GameStatus.WaitingForAnswer, GameEvent.TimeOver);
-                    ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
+                    ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_MUSIC, 100);
                     toneG.startTone(ToneGenerator.TONE_SUP_ERROR, 1000);
                 }
             }.start();
@@ -403,6 +409,9 @@ public class Quiz extends AppCompatActivity {
         tvQuestion = findViewById(R.id.question);
         tvGameStatus = findViewById(R.id.GameStatus);
         tvSecToAnswer = findViewById(R.id.SecToAnswerTxt);
+        pbTimer = findViewById(R.id.progressBarTimer);
+
+        pbTimer.setMax(HOW_LONG_TO_WAIT_ANSWER_IN_SEC);
 
         currentGameStatus = gameFlow(this.getCurrentFocus(),GameStatus.None,GameEvent.StartNewGame);
 

@@ -157,20 +157,20 @@
 
     <TextView
         android:id="@+id/SecToAnswerTxt"
-        android:layout_width="382dp"
-        android:layout_height="50dp"
+        android:layout_width="56dp"
+        android:layout_height="35dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="116dp"
 
         android:gravity="center"
-        android:text="Sec To Answer"
+        android:text="99"
         android:textAlignment="center"
         android:textColor="@color/white"
-        android:textSize="20dp"
+        android:textSize="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
@@ -179,7 +179,7 @@
         android:layout_height="50dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="52dp"
+        android:layout_marginBottom="36dp"
 
         android:gravity="center"
         android:text="Game Status"
@@ -190,6 +190,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.666"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/progressBarTimer"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="309dp"
+        android:layout_height="14dp"
+        android:layout_marginTop="8dp"
+        android:padding="100dp"
+        android:indeterminate="false"
+        android:progress="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/SecToAnswerTxt" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
