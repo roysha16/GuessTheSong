@@ -38,13 +38,14 @@
         android:id="@+id/line_b"
         android:layout_width="340dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="1dp"
         android:layout_marginStart="60dp"
+        android:layout_marginTop="1dp"
         android:text="user is a@a.com"
-        android:textColor="@color/purple_200"
+        android:textColor="@color/white"
         android:textSize="12sp"
-        app:layout_constraintTop_toBottomOf="@+id/line_a"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/line_a" />
+
     <TextView
         android:id="@+id/line_c"
         android:layout_width="340dp"
@@ -52,10 +53,10 @@
         android:layout_marginStart="60dp"
         android:layout_marginTop="1dp"
         android:text="time is 00:223:2323:"
-        android:textColor="@color/purple_200"
+        android:textColor="@color/white"
         android:textSize="10sp"
-        app:layout_constraintTop_toBottomOf="@+id/line_b"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/line_b" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

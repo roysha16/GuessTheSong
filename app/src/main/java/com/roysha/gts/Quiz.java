@@ -144,7 +144,8 @@ public class Quiz extends AppCompatActivity {
                 }
             }.start();
         } else {
-            countDownTimer.cancel();
+            if(countDownTimer != null)
+                countDownTimer.cancel();
         }
     }
 
@@ -395,6 +396,11 @@ public class Quiz extends AppCompatActivity {
                     // Handle the returned Uri
                 }
             });
+        public void onDestroy()
+        {
+            super.onDestroy();
+            HandleCountDownTimer(false);
+        }
         protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
