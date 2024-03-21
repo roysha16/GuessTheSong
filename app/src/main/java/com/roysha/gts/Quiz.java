@@ -320,8 +320,13 @@ public class Quiz extends AppCompatActivity {
         youTubePlayerView.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
             @Override
             public void onReady(@NonNull YouTubePlayer youTubePlayer) {
-
-                youTubePlayer.loadVideo(videoId, 0);
+                Boolean Visibility = youTubePlayerView.isShown();
+                if(Visibility) {
+                    youTubePlayer.loadVideo(videoId, 0);
+                }
+                else {
+                    Toast.makeText(Quiz.this, "Not Visibale so no song ...", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
