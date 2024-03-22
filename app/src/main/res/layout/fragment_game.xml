@@ -52,7 +52,6 @@
         android:id="@+id/StartNewGame"
         android:layout_width="326dp"
         android:layout_height="65dp"
-        android:layout_below="@id/choices_layout"
         android:layout_marginTop="48dp"
         android:text="Start"
         app:layout_constraintEnd_toEndOf="parent"

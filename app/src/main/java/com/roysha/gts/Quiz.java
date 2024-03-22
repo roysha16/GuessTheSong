@@ -325,7 +325,7 @@ public class Quiz extends AppCompatActivity {
                     youTubePlayer.loadVideo(videoId, 0);
                 }
                 else {
-                    Toast.makeText(Quiz.this, "Not Visibale so no song ...", Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(Quiz.this, "Not Visibale so no song ...", Toast.LENGTH_SHORT).show();
                 }
             }
         });
