@@ -15,7 +15,7 @@
         android:background="@drawable/border"
         android:text="16"
         android:textAlignment="center"
-        android:textColor="@color/purple_200"
+        android:textColor="@color/white"
         android:textSize="14sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
